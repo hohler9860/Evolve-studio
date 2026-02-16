@@ -263,8 +263,8 @@ if (!isReducedMotion && !isMobile) {
 
 // --- Glass card tilt on mouse (does NOT use transform, uses a wrapper approach) ---
 document.querySelectorAll('.glass-card').forEach(card => {
-  // Skip cards inside pricing grid to avoid jank
-  if (card.closest('.pricing-grid') || card.closest('.faq-list')) return;
+  // Skip cards that shouldn't tilt
+  if (card.closest('.pricing-grid') || card.closest('.faq-list') || card.classList.contains('cta-glass')) return;
 
   card.addEventListener('mousemove', (e) => {
     const rect = card.getBoundingClientRect();

@@ -341,9 +341,9 @@ input, button, textarea {
 }
 
 .logo {
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
   color: var(--text);
 }
 
@@ -1511,6 +1511,13 @@ img.avatar {
 .cta-glass {
   padding: 56px 48px;
   background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.cta-glass,
+.cta-glass:hover {
+  transform: none !important;
+  box-shadow: var(--glass-shadow) !important;
+  border-color: var(--glass-border) !important;
 }
 
 .cta-urgency {
