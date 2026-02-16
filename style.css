@@ -723,14 +723,17 @@ input, button, textarea {
 .marquee-track {
   overflow: hidden;
   position: relative;
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
 }
 
 .marquee-content {
   display: flex;
   gap: 32px;
   white-space: nowrap;
-  animation: marquee 30s linear infinite;
-  width: max-content;
+  padding-right: 32px;
+  flex-shrink: 0;
 }
 
 .marquee-item {
