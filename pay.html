@@ -365,7 +365,7 @@
           <div class="plan-radio"></div>
           <div class="plan-details">
             <div class="plan-name">Starter</div>
-            <div class="plan-price-info">$499.99 setup + $24.99/mo</div>
+            <div class="plan-price-info">$499.99 setup + from $24.99/mo*</div>
           </div>
         </label>
         <label class="plan-option" data-plan="growth">
@@ -374,7 +374,7 @@
           <div class="plan-radio"></div>
           <div class="plan-details">
             <div class="plan-name">Growth</div>
-            <div class="plan-price-info">$949.99 setup + $24.99/mo</div>
+            <div class="plan-price-info">$949.99 setup + from $24.99/mo*</div>
           </div>
         </label>
         <label class="plan-option" data-plan="premium">
@@ -382,7 +382,7 @@
           <div class="plan-radio"></div>
           <div class="plan-details">
             <div class="plan-name">Premium</div>
-            <div class="plan-price-info">$1,499.99 setup + $19.99/mo</div>
+            <div class="plan-price-info">$1,499.99 setup + from $19.99/mo*</div>
           </div>
         </label>
       </div>
@@ -418,6 +418,9 @@
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="8" height="5" rx="1"/><path d="M5 7V5a2 2 0 0 1 4 0v2"/></svg>
         Secured by Stripe. We never see your card details.
       </div>
+      <div class="secure-note" id="monthly-note" style="margin-top:8px; font-size:0.7rem;">
+        *Monthly rate is a starting price. Actual cost may vary based on traffic, storage, and features.
+      </div>
     </div>
 
     <a href="/" class="back-link">Back to website</a>
@@ -425,9 +428,9 @@
 
   <script>
     const plans = {
-      starter:  { name: 'Starter',  setup: 499.99,  monthly: 24.99, url: 'https://buy.stripe.com/fZu4gAdXD6pi9TpfczcfK03' },
-      growth:   { name: 'Growth',   setup: 949.99,  monthly: 24.99, url: 'https://buy.stripe.com/3cI3cw1aR6pi6Hd5BZcfK02' },
-      premium:  { name: 'Premium',  setup: 1499.99, monthly: 19.99, url: 'https://buy.stripe.com/9B67sM5r72929Tp8ObcfK01' }
+      starter:  { name: 'Starter',  setup: 499.99,  monthly: 24.99, monthlyLabel: 'from $24.99/mo', url: 'https://buy.stripe.com/fZu4gAdXD6pi9TpfczcfK03' },
+      growth:   { name: 'Growth',   setup: 949.99,  monthly: 24.99, monthlyLabel: 'from $24.99/mo', url: 'https://buy.stripe.com/3cI3cw1aR6pi6Hd5BZcfK02' },
+      premium:  { name: 'Premium',  setup: 1499.99, monthly: 19.99, monthlyLabel: 'from $19.99/mo', url: 'https://buy.stripe.com/9B67sM5r72929Tp8ObcfK01' }
     };
 
     const planOptions = document.querySelectorAll('.plan-option');
@@ -521,7 +524,7 @@
         summaryPlan.textContent = plan.name;
         summarySetup.textContent = formatPrice(plan.setup);
         summaryTotal.textContent = formatPrice(plan.setup);
-        summaryMonthly.textContent = `then ${formatPrice(plan.monthly)}/mo starting next month`;
+        summaryMonthly.textContent = `${plan.monthlyLabel} starting next month*`;
       }
 
       planOptions.forEach(option => {

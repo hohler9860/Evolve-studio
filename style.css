@@ -1339,6 +1339,31 @@ input, button, textarea {
   flex-shrink: 0;
 }
 
+.pricing-features li .x-icon {
+  flex-shrink: 0;
+}
+
+.pricing-feature-missing {
+  opacity: 0.45;
+}
+
+.pricing-monthly-note {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85em;
+}
+
+.pricing-monthly-disclaimer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 32px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
 .pricing-guarantee {
   text-align: center;
   font-size: 14px;
