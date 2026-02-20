@@ -11,6 +11,7 @@ const stripe = process.env.STRIPE_SECRET_KEY
   : null;
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'evolve-studio-secret-change-me';
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
@@ -225,7 +226,8 @@ app.post('/api/checkout', async (req, res) => {
   }
 
   const selected = PLANS[plan];
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  const protocol = process.env.NODE_ENV === 'production' || req.get('x-forwarded-proto') === 'https' ? 'https' : req.protocol;
+  const baseUrl = `${protocol}://${req.get('host')}`;
 
   try {
     const sessionObj = await stripe.checkout.sessions.create({
@@ -255,8 +257,8 @@ app.post('/api/checkout', async (req, res) => {
 
     res.json({ url: sessionObj.url });
   } catch (err) {
-    console.error('Stripe checkout error:', err.message);
-    res.status(500).json({ error: 'Failed to create checkout session. Please try again.' });
+    console.error('Stripe checkout error:', err.type, err.message, err.code);
+    res.status(500).json({ error: err.message || 'Failed to create checkout session. Please try again.' });
   }
 });
 
