@@ -6,7 +6,9 @@ const session = require('express-session');
 const Stripe = require('stripe');
 require('dotenv').config();
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -204,6 +206,10 @@ const PLANS = {
 };
 
 app.post('/api/checkout', async (req, res) => {
+  if (!stripe) {
+    return res.status(500).json({ error: 'Payments are not configured. Please contact us.' });
+  }
+
   const { plan, email, businessName } = req.body;
 
   if (!plan || !PLANS[plan]) {
