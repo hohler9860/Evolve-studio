@@ -17,7 +17,11 @@ const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASS_HASH = bcrypt.hashSync(process.env.ADMIN_PASS || 'evolve2026', 10);
 
 // --- Database setup ---
-const db = new Database(path.join(__dirname, 'leads.db'));
+// Use persistent volume path on Railway if available, otherwise local
+const DB_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || __dirname;
+const DB_PATH = path.join(DB_DIR, 'leads.db');
+console.log(`Database path: ${DB_PATH}`);
+const db = new Database(DB_PATH);
 db.pragma('journal_mode = WAL');
 
 db.exec(`
