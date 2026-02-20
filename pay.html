@@ -358,7 +358,8 @@
 
       <div class="error-msg" id="error-msg"></div>
 
-      <div class="plan-options">
+      <!-- Plan selector (hidden in custom mode) -->
+      <div class="plan-options" id="plan-options">
         <label class="plan-option selected" data-plan="starter">
           <input type="radio" name="plan" value="starter" checked>
           <div class="plan-radio"></div>
@@ -388,12 +389,16 @@
 
       <div class="order-summary">
         <h4>Order summary</h4>
-        <div class="order-line">
+        <div class="order-line" id="order-plan-row">
           <span class="order-label">Plan</span>
           <span class="order-value" id="summary-plan">Starter</span>
         </div>
+        <div class="order-line" id="order-desc-row" style="display:none;">
+          <span class="order-label">Description</span>
+          <span class="order-value" id="summary-desc"></span>
+        </div>
         <div class="order-line">
-          <span class="order-label">One-time setup</span>
+          <span class="order-label" id="order-setup-label">One-time setup</span>
           <span class="order-value" id="summary-setup">$499.99</span>
         </div>
         <div class="order-divider"></div>
@@ -437,62 +442,126 @@
       return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    function getSelectedPlan() {
-      const checked = document.querySelector('input[name="plan"]:checked');
-      return checked ? checked.value : 'starter';
-    }
-
-    function updateSummary() {
-      const key = getSelectedPlan();
-      const plan = plans[key];
-      summaryPlan.textContent = plan.name;
-      summarySetup.textContent = formatPrice(plan.setup);
-      summaryTotal.textContent = formatPrice(plan.setup);
-      summaryMonthly.textContent = `then ${formatPrice(plan.monthly)}/mo starting next month`;
-    }
-
-    planOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        planOptions.forEach(o => o.classList.remove('selected'));
-        option.classList.add('selected');
-        option.querySelector('input[type="radio"]').checked = true;
-        updateSummary();
-      });
-    });
-
-    // Check for URL parameters (client, email, plan)
+    // Parse URL params
     const urlParams = new URLSearchParams(window.location.search);
     const planParam = urlParams.get('plan');
     const clientParam = urlParams.get('client');
+    const amountParam = urlParams.get('amount');
+    const descParam = urlParams.get('desc');
 
-    // Pre-select plan from URL
-    if (planParam && plans[planParam]) {
-      planOptions.forEach(o => o.classList.remove('selected'));
-      const target = document.querySelector(`.plan-option[data-plan="${planParam}"]`);
-      if (target) {
-        target.classList.add('selected');
-        target.querySelector('input[type="radio"]').checked = true;
-        updateSummary();
-      }
-    }
+    // Detect custom amount mode
+    const isCustom = amountParam && parseFloat(amountParam) > 0;
 
-    // Personalize heading from URL
-    if (clientParam) {
-      document.getElementById('pay-heading').textContent = `Welcome, ${decodeURIComponent(clientParam)}`;
-      document.getElementById('pay-desc').textContent = 'Your custom mockup is ready. Select your plan and proceed to payment.';
-    }
+    if (isCustom) {
+      // --- CUSTOM AMOUNT MODE ---
+      const customAmount = parseFloat(amountParam);
+      const customDesc = descParam ? decodeURIComponent(descParam) : 'Custom payment';
 
-    // Checkout button - redirect straight to Stripe Payment Link
-    btnPay.addEventListener('click', () => {
-      const plan = getSelectedPlan();
-      const payUrl = plans[plan].url;
+      // Hide plan selector
+      document.getElementById('plan-options').style.display = 'none';
 
-      if (payUrl) {
+      // Update heading
+      document.getElementById('pay-heading').textContent = clientParam
+        ? `Invoice for ${decodeURIComponent(clientParam)}`
+        : 'Complete your payment';
+      document.getElementById('pay-desc').textContent = 'Review the details below and proceed to checkout.';
+
+      // Update order summary
+      document.getElementById('order-plan-row').style.display = 'none';
+      document.getElementById('order-desc-row').style.display = 'flex';
+      document.getElementById('summary-desc').textContent = customDesc;
+      document.getElementById('order-setup-label').textContent = 'Amount';
+      summarySetup.textContent = formatPrice(customAmount);
+      summaryTotal.textContent = formatPrice(customAmount);
+      summaryMonthly.style.display = 'none';
+
+      // Checkout sends to Stripe Checkout API for custom amount
+      btnPay.addEventListener('click', async () => {
         btnPay.classList.add('loading');
         btnPay.disabled = true;
-        window.location.href = payUrl;
+        errorMsg.classList.remove('show');
+
+        try {
+          const res = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              plan: 'custom',
+              amount: customAmount,
+              description: customDesc,
+              businessName: clientParam ? decodeURIComponent(clientParam) : ''
+            })
+          });
+
+          const data = await res.json();
+
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            throw new Error(data.error || 'Something went wrong.');
+          }
+        } catch (err) {
+          errorMsg.textContent = err.message || 'Something went wrong. Please try again.';
+          errorMsg.classList.add('show');
+          btnPay.classList.remove('loading');
+          btnPay.disabled = false;
+        }
+      });
+
+    } else {
+      // --- STANDARD PLAN MODE ---
+      function getSelectedPlan() {
+        const checked = document.querySelector('input[name="plan"]:checked');
+        return checked ? checked.value : 'starter';
       }
-    });
+
+      function updateSummary() {
+        const key = getSelectedPlan();
+        const plan = plans[key];
+        summaryPlan.textContent = plan.name;
+        summarySetup.textContent = formatPrice(plan.setup);
+        summaryTotal.textContent = formatPrice(plan.setup);
+        summaryMonthly.textContent = `then ${formatPrice(plan.monthly)}/mo starting next month`;
+      }
+
+      planOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          planOptions.forEach(o => o.classList.remove('selected'));
+          option.classList.add('selected');
+          option.querySelector('input[type="radio"]').checked = true;
+          updateSummary();
+        });
+      });
+
+      // Pre-select plan from URL
+      if (planParam && plans[planParam]) {
+        planOptions.forEach(o => o.classList.remove('selected'));
+        const target = document.querySelector(`.plan-option[data-plan="${planParam}"]`);
+        if (target) {
+          target.classList.add('selected');
+          target.querySelector('input[type="radio"]').checked = true;
+          updateSummary();
+        }
+      }
+
+      // Personalize heading from URL
+      if (clientParam) {
+        document.getElementById('pay-heading').textContent = `Welcome, ${decodeURIComponent(clientParam)}`;
+        document.getElementById('pay-desc').textContent = 'Your custom mockup is ready. Select your plan and proceed to payment.';
+      }
+
+      // Checkout button - redirect straight to Stripe Payment Link
+      btnPay.addEventListener('click', () => {
+        const plan = getSelectedPlan();
+        const payUrl = plans[plan].url;
+
+        if (payUrl) {
+          btnPay.classList.add('loading');
+          btnPay.disabled = true;
+          window.location.href = payUrl;
+        }
+      });
+    }
   </script>
 </body>
 </html>

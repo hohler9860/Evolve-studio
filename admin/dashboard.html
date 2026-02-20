@@ -424,6 +424,51 @@
       color: var(--text);
     }
 
+    .modal-or {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 16px 0;
+      position: relative;
+    }
+
+    .modal-or::before,
+    .modal-or::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: calc(50% - 24px);
+      height: 1px;
+      background: var(--border);
+    }
+
+    .modal-or::before { left: 0; }
+    .modal-or::after { right: 0; }
+
+    .custom-amount-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .custom-amount-row input {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .custom-amount-row input:focus { border-color: var(--accent); }
+    .custom-amount-row input::placeholder { color: var(--text-muted); }
+
     .date-cell {
       font-size: 12px;
       color: var(--text-muted);
@@ -559,16 +604,22 @@
         <option value="premium">Premium - $1,499.99 + $19.99/mo</option>
       </select>
 
-      <div class="modal-label">Pay page link (personalized)</div>
+      <div class="modal-label">Plan payment link</div>
       <div class="modal-link-box">
         <input type="text" class="modal-link-input" id="modal-link" readonly>
         <button class="btn-copy" id="btn-copy" onclick="copyPayLink()">Copy</button>
       </div>
 
-      <div class="modal-label">Direct Stripe link</div>
+      <div class="modal-or">or</div>
+
+      <div class="modal-label">Custom amount</div>
+      <div class="custom-amount-row">
+        <input type="number" id="modal-custom-amount" placeholder="Amount ($)" min="1" step="0.01">
+        <input type="text" id="modal-custom-desc" placeholder="Description (e.g. Website redesign)">
+      </div>
       <div class="modal-link-box">
-        <input type="text" class="modal-link-input" id="modal-direct-link" readonly>
-        <button class="btn-copy" id="btn-copy-direct" onclick="copyDirectLink()">Copy</button>
+        <input type="text" class="modal-link-input" id="modal-custom-link" readonly placeholder="Enter amount above to generate link">
+        <button class="btn-copy" id="btn-copy-custom" onclick="copyCustomLink()">Copy</button>
       </div>
 
       <div class="modal-actions">
@@ -721,10 +772,15 @@
       if (!payModalLead) return;
 
       document.getElementById('modal-sub').textContent =
-        `Create a personalized checkout link for ${payModalLead.business || payModalLead.name}.`;
+        `Create a checkout link for ${payModalLead.business || payModalLead.name}.`;
       document.getElementById('modal-plan').value = 'growth';
+      document.getElementById('modal-custom-amount').value = '';
+      document.getElementById('modal-custom-desc').value = '';
+      document.getElementById('modal-custom-link').value = '';
       document.getElementById('btn-copy').textContent = 'Copy';
       document.getElementById('btn-copy').classList.remove('copied');
+      document.getElementById('btn-copy-custom').textContent = 'Copy';
+      document.getElementById('btn-copy-custom').classList.remove('copied');
       updatePayLink();
       document.getElementById('pay-modal').classList.add('show');
     }
@@ -742,17 +798,30 @@
         client: payModalLead.business || payModalLead.name,
         plan: plan
       });
-      // Pay page link (personalized with client name, redirects to Stripe)
-      const payPageLink = `${base}/pay?${params.toString()}`;
-      // Direct Stripe link
-      const directLink = stripeLinks[plan];
-
-      document.getElementById('modal-link').value = payPageLink;
-      document.getElementById('modal-direct-link').value = directLink;
+      document.getElementById('modal-link').value = `${base}/pay?${params.toString()}`;
       document.getElementById('btn-copy').textContent = 'Copy';
       document.getElementById('btn-copy').classList.remove('copied');
-      document.getElementById('btn-copy-direct').textContent = 'Copy';
-      document.getElementById('btn-copy-direct').classList.remove('copied');
+      updateCustomLink();
+    }
+
+    function updateCustomLink() {
+      if (!payModalLead) return;
+      const amount = document.getElementById('modal-custom-amount').value;
+      const desc = document.getElementById('modal-custom-desc').value || 'Website project';
+      const base = window.location.origin;
+
+      if (amount && parseFloat(amount) > 0) {
+        const params = new URLSearchParams({
+          client: payModalLead.business || payModalLead.name,
+          amount: amount,
+          desc: desc
+        });
+        document.getElementById('modal-custom-link').value = `${base}/pay?${params.toString()}`;
+      } else {
+        document.getElementById('modal-custom-link').value = '';
+      }
+      document.getElementById('btn-copy-custom').textContent = 'Copy';
+      document.getElementById('btn-copy-custom').classList.remove('copied');
     }
 
     function copyPayLink() {
@@ -768,10 +837,11 @@
       });
     }
 
-    function copyDirectLink() {
-      const linkInput = document.getElementById('modal-direct-link');
+    function copyCustomLink() {
+      const linkInput = document.getElementById('modal-custom-link');
+      if (!linkInput.value) return;
       navigator.clipboard.writeText(linkInput.value).then(() => {
-        const btn = document.getElementById('btn-copy-direct');
+        const btn = document.getElementById('btn-copy-custom');
         btn.textContent = 'Copied!';
         btn.classList.add('copied');
         setTimeout(() => {
@@ -780,6 +850,10 @@
         }, 2000);
       });
     }
+
+    // Live-update custom link as user types
+    document.getElementById('modal-custom-amount').addEventListener('input', updateCustomLink);
+    document.getElementById('modal-custom-desc').addEventListener('input', updateCustomLink);
 
     // Close modal on overlay click
     document.getElementById('pay-modal').addEventListener('click', (e) => {
