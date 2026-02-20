@@ -293,6 +293,137 @@
       border-color: rgba(239, 68, 68, 0.2);
     }
 
+    .action-btn.pay-link:hover {
+      background: rgba(16, 185, 129, 0.1);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    /* --- Payment link modal --- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 24px;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .modal-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .modal-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-plan-select {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 16px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .modal-plan-select:focus { border-color: var(--accent); }
+
+    .modal-link-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .modal-link-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 12px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      outline: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-link-input:focus { border-color: var(--accent); }
+
+    .btn-copy {
+      padding: 10px 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-copy:hover { opacity: 0.9; }
+    .btn-copy.copied { background: var(--green); }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-close-modal {
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-close-modal:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
     .date-cell {
       font-size: 12px;
       color: var(--text-muted);
@@ -415,6 +546,31 @@
     </div>
   </div>
 
+  <!-- Payment Link Modal -->
+  <div class="modal-overlay" id="pay-modal">
+    <div class="modal-card">
+      <div class="modal-title">Generate Payment Link</div>
+      <div class="modal-sub" id="modal-sub">Create a personalized checkout link for this client.</div>
+
+      <div class="modal-label">Plan</div>
+      <select class="modal-plan-select" id="modal-plan" onchange="updatePayLink()">
+        <option value="starter">Starter - $499.99 + $24.99/mo</option>
+        <option value="growth" selected>Growth - $949.99 + $24.99/mo</option>
+        <option value="premium">Premium - $1,499.99 + $19.99/mo</option>
+      </select>
+
+      <div class="modal-label">Payment link</div>
+      <div class="modal-link-box">
+        <input type="text" class="modal-link-input" id="modal-link" readonly>
+        <button class="btn-copy" id="btn-copy" onclick="copyPayLink()">Copy</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-close-modal" onclick="closePayModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let allLeads = [];
     let currentFilter = 'all';
@@ -484,6 +640,9 @@
             <td class="date-cell">${dateStr}<br>${timeStr}</td>
             <td>
               <div class="action-btns">
+                <button class="action-btn pay-link" onclick="openPayModal(${lead.id})" title="Payment link">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M9 3l4 4-4 4"/></svg>
+                </button>
                 <button class="action-btn delete" onclick="deleteLead(${lead.id})" title="Delete">
                   <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4h10M4 4V2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5V4M5.5 7v3M8.5 7v3"/></svg>
                 </button>
@@ -539,6 +698,64 @@
         currentFilter = btn.dataset.filter;
         renderLeads();
       });
+    });
+
+    // --- Payment link modal ---
+    let payModalLead = null;
+
+    function openPayModal(id) {
+      payModalLead = allLeads.find(l => l.id === id);
+      if (!payModalLead) return;
+
+      document.getElementById('modal-sub').textContent =
+        `Create a personalized checkout link for ${payModalLead.business || payModalLead.name}.`;
+      document.getElementById('modal-plan').value = 'growth';
+      document.getElementById('btn-copy').textContent = 'Copy';
+      document.getElementById('btn-copy').classList.remove('copied');
+      updatePayLink();
+      document.getElementById('pay-modal').classList.add('show');
+    }
+
+    function closePayModal() {
+      document.getElementById('pay-modal').classList.remove('show');
+      payModalLead = null;
+    }
+
+    function updatePayLink() {
+      if (!payModalLead) return;
+      const plan = document.getElementById('modal-plan').value;
+      const base = window.location.origin;
+      const params = new URLSearchParams({
+        client: payModalLead.business || payModalLead.name,
+        email: payModalLead.email,
+        plan: plan
+      });
+      document.getElementById('modal-link').value = `${base}/pay?${params.toString()}`;
+      document.getElementById('btn-copy').textContent = 'Copy';
+      document.getElementById('btn-copy').classList.remove('copied');
+    }
+
+    function copyPayLink() {
+      const linkInput = document.getElementById('modal-link');
+      navigator.clipboard.writeText(linkInput.value).then(() => {
+        const btn = document.getElementById('btn-copy');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Close modal on overlay click
+    document.getElementById('pay-modal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closePayModal();
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePayModal();
     });
 
     // --- Init ---

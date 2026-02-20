@@ -353,8 +353,8 @@
     <p class="pay-subtitle">Secure Payment</p>
 
     <div class="pay-card">
-      <h2 class="pay-heading">Choose your plan</h2>
-      <p class="pay-desc">Select a plan below to proceed to checkout.</p>
+      <h2 class="pay-heading" id="pay-heading">Choose your plan</h2>
+      <p class="pay-desc" id="pay-desc">Select a plan below to proceed to checkout.</p>
 
       <div class="error-msg" id="error-msg"></div>
 
@@ -470,9 +470,13 @@
       });
     });
 
-    // Check for plan parameter in URL
+    // Check for URL parameters (client, email, plan)
     const urlParams = new URLSearchParams(window.location.search);
     const planParam = urlParams.get('plan');
+    const clientParam = urlParams.get('client');
+    const emailParam = urlParams.get('email');
+
+    // Pre-select plan from URL
     if (planParam && plans[planParam]) {
       planOptions.forEach(o => o.classList.remove('selected'));
       const target = document.querySelector(`.plan-option[data-plan="${planParam}"]`);
@@ -481,6 +485,19 @@
         target.querySelector('input[type="radio"]').checked = true;
         updateSummary();
       }
+    }
+
+    // Pre-fill client info from URL
+    if (clientParam) {
+      const nameInput = document.getElementById('customer-name');
+      nameInput.value = decodeURIComponent(clientParam);
+      document.getElementById('pay-heading').textContent = `Welcome, ${decodeURIComponent(clientParam)}`;
+      document.getElementById('pay-desc').textContent = 'Your custom mockup is ready. Select your plan and proceed to payment.';
+    }
+
+    if (emailParam) {
+      const emailInput = document.getElementById('customer-email');
+      emailInput.value = decodeURIComponent(emailParam);
     }
 
     // Checkout button
