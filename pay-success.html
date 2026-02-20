@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful | evolve studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0c0e14;
+      color: #f0f0f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .success-card {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 24px;
+      padding: 48px 36px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 2px solid rgba(16, 185, 129, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .success-logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      margin-bottom: 24px;
+    }
+
+    .success-logo span { font-weight: 400; color: #9ca3b4; }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #9ca3b4;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .next-steps {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 28px 0;
+      text-align: left;
+    }
+
+    .next-steps h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #9ca3b4;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+
+    .next-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 8px 0;
+    }
+
+    .next-step-num {
+      width: 24px;
+      height: 24px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #3b82f6;
+      flex-shrink: 0;
+    }
+
+    .next-step p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #9ca3b4;
+    }
+
+    .btn-home {
+      display: inline-block;
+      padding: 14px 32px;
+      background: #f0f0f5;
+      color: #0c0e14;
+      border: none;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-home:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 540px) {
+      .success-card { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="success-card">
+    <div class="success-logo">evolve <span>studio</span></div>
+    <div class="success-icon">
+      <svg width="28" height="28" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8L11 17l-5-5"/></svg>
+    </div>
+    <h1>Payment successful</h1>
+    <p>Thank you for choosing evolve studio. We have received your payment and are getting started on your project.</p>
+
+    <div class="next-steps">
+      <h3>What happens next</h3>
+      <div class="next-step">
+        <div class="next-step-num">1</div>
+        <p>You will receive a confirmation email with your receipt shortly.</p>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">2</div>
+        <p>Our team will reach out within 24 hours to kick off your project.</p>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">3</div>
+        <p>Your website will be designed, built, and ready for review within 48 hours.</p>
+      </div>
+    </div>
+
+    <a href="/" class="btn-home">Back to homepage</a>
+  </div>
+</body>
+</html>

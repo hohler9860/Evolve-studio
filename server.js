@@ -3,7 +3,10 @@ const path = require('path');
 const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
+const Stripe = require('stripe');
 require('dotenv').config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -187,6 +190,63 @@ app.get('/api/admin/stats', requireAuth, (req, res) => {
     res.json({ total, newLeads, contacted, converted, today });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch stats.' });
+  }
+});
+
+// ============================================
+// Stripe Checkout
+// ============================================
+
+const PLANS = {
+  starter: { name: 'Starter', setup: 49999, monthly: 2499 },
+  growth:  { name: 'Growth',  setup: 94999, monthly: 2499 },
+  premium: { name: 'Premium', setup: 149999, monthly: 1999 }
+};
+
+app.post('/api/checkout', async (req, res) => {
+  const { plan, email, businessName } = req.body;
+
+  if (!plan || !PLANS[plan]) {
+    return res.status(400).json({ error: 'Invalid plan selected.' });
+  }
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required.' });
+  }
+
+  const selected = PLANS[plan];
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+
+  try {
+    const sessionObj = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      customer_email: email,
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: `evolve studio - ${selected.name} Plan (Setup)`,
+              description: `One-time website setup fee for the ${selected.name} plan. Monthly hosting ($${(selected.monthly / 100).toFixed(2)}/mo) will be billed separately.`
+            },
+            unit_amount: selected.setup
+          },
+          quantity: 1
+        }
+      ],
+      metadata: {
+        plan: plan,
+        business_name: businessName || '',
+        monthly_amount: selected.monthly
+      },
+      success_url: `${baseUrl}/pay-success.html`,
+      cancel_url: `${baseUrl}/pay.html?plan=${plan}`
+    });
+
+    res.json({ url: sessionObj.url });
+  } catch (err) {
+    console.error('Stripe checkout error:', err.message);
+    res.status(500).json({ error: 'Failed to create checkout session. Please try again.' });
   }
 });
 
