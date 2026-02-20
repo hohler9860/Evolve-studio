@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
@@ -20,6 +21,10 @@ const ADMIN_PASS_HASH = bcrypt.hashSync(process.env.ADMIN_PASS || 'evolve2026', 
 // --- Database setup ---
 // Use persistent volume path on Railway if available, otherwise local
 const DB_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || __dirname;
+// Ensure the directory exists (Railway volume may not be auto-created)
+if (!fs.existsSync(DB_DIR)) {
+  fs.mkdirSync(DB_DIR, { recursive: true });
+}
 const DB_PATH = path.join(DB_DIR, 'leads.db');
 console.log(`Database path: ${DB_PATH}`);
 const db = new Database(DB_PATH);
