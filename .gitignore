@@ -1,8 +1,8 @@
 node_modules/
-leads.db
-leads.db-wal
-leads.db-shm
 .env
+.env.local
+.env*.local
+.vercel
 .DS_Store
 IMG_1537.JPG
 Screenshot*.png

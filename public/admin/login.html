@@ -137,7 +137,7 @@
 
     <div class="error-msg" id="error-msg">Invalid username or password.</div>
 
-    <form action="/admin/login" method="POST">
+    <form id="login-form">
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" placeholder="Enter username" required autofocus>
@@ -153,9 +153,29 @@
   </div>
 
   <script>
-    if (window.location.search.includes('error=1')) {
-      document.getElementById('error-msg').classList.add('show');
-    }
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('error-msg');
+      errorMsg.classList.remove('show');
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (res.ok) {
+          window.location.href = '/admin/dashboard';
+        } else {
+          errorMsg.classList.add('show');
+        }
+      } catch {
+        errorMsg.classList.add('show');
+      }
+    });
   </script>
 </body>
 </html>

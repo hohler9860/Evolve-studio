@@ -526,7 +526,7 @@
     <div class="topbar-logo">evolve <span>studio</span></div>
     <div class="topbar-right">
       <a href="/">View website</a>
-      <a href="/admin/logout" class="btn-logout">Sign out</a>
+      <a href="#" class="btn-logout" onclick="logout(event)">Sign out</a>
     </div>
   </div>
 
@@ -629,13 +629,29 @@
   </div>
 
   <script>
+    // --- Auth helper: redirect to login on 401 ---
+    async function authFetch(url, options = {}) {
+      const res = await fetch(url, options);
+      if (res.status === 401) {
+        window.location.href = '/admin/login';
+        throw new Error('Unauthorized');
+      }
+      return res;
+    }
+
+    async function logout(e) {
+      e.preventDefault();
+      await fetch('/api/admin/logout', { method: 'POST' });
+      window.location.href = '/admin/login';
+    }
+
     let allLeads = [];
     let currentFilter = 'all';
 
     // --- Load stats ---
     async function loadStats() {
       try {
-        const res = await fetch('/api/admin/stats');
+        const res = await authFetch('/api/admin/stats');
         const data = await res.json();
         document.getElementById('stat-total').textContent = data.total;
         document.getElementById('stat-new').textContent = data.newLeads;
@@ -650,7 +666,7 @@
     // --- Load leads ---
     async function loadLeads() {
       try {
-        const res = await fetch('/api/admin/leads');
+        const res = await authFetch('/api/admin/leads');
         allLeads = await res.json();
         renderLeads();
       } catch (err) {
@@ -672,7 +688,7 @@
       }
 
       tbody.innerHTML = filtered.map(lead => {
-        const date = new Date(lead.created_at + 'Z');
+        const date = new Date(lead.created_at);
         const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         const linkDisplay = lead.link
@@ -720,7 +736,7 @@
     // --- Update lead status ---
     async function updateStatus(id, status) {
       try {
-        await fetch(`/api/admin/leads/${id}`, {
+        await authFetch(`/api/admin/leads/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status })
@@ -738,7 +754,7 @@
     async function deleteLead(id) {
       if (!confirm('Delete this lead? This cannot be undone.')) return;
       try {
-        await fetch(`/api/admin/leads/${id}`, { method: 'DELETE' });
+        await authFetch(`/api/admin/leads/${id}`, { method: 'DELETE' });
         allLeads = allLeads.filter(l => l.id !== id);
         renderLeads();
         loadStats();
