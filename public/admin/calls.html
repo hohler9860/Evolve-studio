@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calls | evolve studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0c0e14;
+      --bg-alt: #111318;
+      --bg-card: #14161e;
+      --text: #f0f0f5;
+      --text-secondary: #9ca3b4;
+      --text-muted: #5c6478;
+      --border: rgba(255, 255, 255, 0.06);
+      --accent: #3b82f6;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+      min-height: 100vh;
+    }
+
+    /* --- Top bar --- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(12, 14, 20, 0.8);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-logo {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .topbar-logo span { font-weight: 400; color: var(--text-secondary); }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-right a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .topbar-right a:hover { color: var(--text); }
+
+    .btn-logout {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    /* --- Main content --- */
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .dash-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .dash-sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    /* --- Stats cards --- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .stat-value.green { color: var(--green); }
+    .stat-value.yellow { color: var(--yellow); }
+    .stat-value.blue { color: var(--accent); }
+    .stat-value.red { color: var(--red); }
+
+    /* --- Table --- */
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .table-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .table-stats {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .table-wrap {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    tbody td {
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .biz-name {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .biz-meta {
+      color: var(--text-muted);
+      font-size: 11px;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* --- Status badge --- */
+    .status-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-badge.connected {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+    }
+
+    .status-badge.failed,
+    .status-badge.no_answer,
+    .status-badge.busy,
+    .status-badge.blocked_by_compliance {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+    }
+
+    .status-badge.dialing,
+    .status-badge.queued,
+    .status-badge.voicemail {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+    }
+
+    .booked {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 100px;
+      background: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+      margin-left: 6px;
+    }
+
+    .compliance {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .compliance .ok { color: #34d399; }
+    .compliance .bad { color: #f87171; }
+
+    details > summary {
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      list-style: none;
+      padding: 4px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    details > summary:hover { color: var(--text); }
+    details[open] > summary { color: var(--text); margin-bottom: 8px; }
+
+    details pre {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.6;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: var(--text-secondary);
+      font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+    }
+
+    .summary-line {
+      color: var(--text-muted);
+      font-size: 11px;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .summary-line b { color: var(--text-secondary); }
+
+    audio {
+      height: 30px;
+      margin-top: 8px;
+      max-width: 100%;
+    }
+
+    .empty-state, .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state p { font-size: 0.95rem; }
+
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard { padding: 20px 16px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .topbar { padding: 12px 16px; }
+      .table-wrap { overflow-x: auto; }
+      table { min-width: 900px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-logo">evolve <span>studio</span></div>
+    <div class="topbar-right">
+      <a href="/admin/dashboard">Leads</a>
+      <a href="/admin/prospects">Prospects</a>
+      <a href="/admin/calls" style="color:#fff">Calls</a>
+      <a href="/">View website</a>
+      <a href="#" class="btn-logout" id="logout">Sign out</a>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <h1 class="dash-title">Call History</h1>
+    <p class="dash-sub">Every outbound AI call, with transcripts and recordings.</p>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total calls</div>
+        <div class="stat-value" id="stat-total">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Connected</div>
+        <div class="stat-value green" id="stat-connected">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Booked</div>
+        <div class="stat-value blue" id="stat-booked">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">No answer / failed</div>
+        <div class="stat-value yellow" id="stat-failed">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Today</div>
+        <div class="stat-value" id="stat-today">-</div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-header">
+      <div class="table-title">Recent Calls</div>
+      <div class="table-stats" id="table-stats"></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Business</th>
+            <th>Status</th>
+            <th>When (ET)</th>
+            <th>Duration</th>
+            <th>Cost</th>
+            <th>Transcript / Audio</th>
+          </tr>
+        </thead>
+        <tbody id="calls-body">
+          <tr><td colspan="6" class="loading">Loading calls...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const $ = sel => document.querySelector(sel);
+
+    async function authFetch(url, options = {}) {
+      const res = await fetch(url, { credentials: 'include', ...options });
+      if (res.status === 401) {
+        window.location.href = '/admin/login';
+        throw new Error('Unauthorized');
+      }
+      return res;
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[<>&"]/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;' }[c]));
+    }
+
+    async function load() {
+      try {
+        const res = await authFetch('/api/admin/call-history?limit=100');
+        const json = await res.json();
+        render(json);
+      } catch (e) {
+        $('#calls-body').innerHTML = '<tr><td colspan="6" class="empty-state"><p>Failed to load: ' + esc(e.message) + '</p></td></tr>';
+      }
+    }
+
+    function render(json) {
+      const calls = json.calls || [];
+      const today = new Date().toISOString().slice(0, 10);
+
+      // Compute stats
+      const total = calls.length;
+      const connected = calls.filter(c => c.status === 'connected').length;
+      const booked = calls.filter(c => c.call_logs?.[0]?.meeting_booked).length;
+      const failed = calls.filter(c => ['failed', 'no_answer', 'busy', 'voicemail', 'blocked_by_compliance'].includes(c.status)).length;
+      const todayCount = calls.filter(c => (c.initiated_at || '').slice(0, 10) === today).length;
+
+      $('#stat-total').textContent = total;
+      $('#stat-connected').textContent = connected;
+      $('#stat-booked').textContent = booked;
+      $('#stat-failed').textContent = failed;
+      $('#stat-today').textContent = todayCount;
+      $('#table-stats').textContent = `${total} call${total === 1 ? '' : 's'}`;
+
+      if (!calls.length) {
+        $('#calls-body').innerHTML = '<tr><td colspan="6" class="empty-state"><p>No calls yet.</p></td></tr>';
+        return;
+      }
+
+      $('#calls-body').innerHTML = calls.map(c => {
+        const log = c.call_logs?.[0];
+        const biz = c.businesses;
+        const contact = c.contacts;
+        const status = c.status || 'unknown';
+        const initiated = c.initiated_at
+          ? new Date(c.initiated_at).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '—';
+        const duration = c.duration_seconds != null ? `${c.duration_seconds}s` : '—';
+        const cost = c.cost_usd != null ? `$${parseFloat(c.cost_usd).toFixed(2)}` : '—';
+        const bookedBadge = log?.meeting_booked ? '<span class="booked">📅 Booked</span>' : '';
+        const transcript = log?.transcript ? `
+          <details>
+            <summary>Transcript ▾</summary>
+            <pre>${esc(log.transcript)}</pre>
+            ${log.summary ? `<div class="summary-line"><b>Summary:</b> ${esc(log.summary)}</div>` : ''}
+          </details>` : '';
+        const audio = log?.audio_url ? `<audio controls preload="none" src="${log.audio_url}"></audio>` : '';
+        const compliance = log ? `
+          <div class="compliance">
+            <span class="${log.disclosure_given ? 'ok' : 'bad'}">${log.disclosure_given ? '✓' : '✗'} disclosure</span>
+            · <span class="${log.recording_consent_given ? 'ok' : 'bad'}">${log.recording_consent_given ? '✓' : '✗'} recording</span>
+          </div>` : '';
+
+        return `
+          <tr>
+            <td>
+              <div class="biz-name">${esc(biz?.name || '?')}</div>
+              <div class="biz-meta">${esc(contact?.full_name || 'main line')}${contact?.title ? ` · ${esc(contact.title)}` : ''}</div>
+              <div class="biz-meta">${esc(biz?.city || '')}, ${esc(biz?.state || '')} · ${esc(biz?.phone_e164 || '')}</div>
+            </td>
+            <td>
+              <span class="status-badge ${status}">${status.replace(/_/g, ' ')}</span>
+              ${bookedBadge}
+              ${compliance}
+            </td>
+            <td>${initiated}</td>
+            <td>${duration}</td>
+            <td>${cost}</td>
+            <td style="max-width:600px">
+              ${transcript}
+              ${audio}
+              ${!transcript && !audio ? '<span style="color:var(--text-muted);font-size:11px">—</span>' : ''}
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    $('#logout').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' });
+      location.href = '/admin/login';
+    });
+
+    load();
+  </script>
+</body>
+</html>

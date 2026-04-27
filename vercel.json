@@ -2,14 +2,22 @@
   "rewrites": [
     { "source": "/admin/dashboard", "destination": "/admin/dashboard.html" },
     { "source": "/admin/login", "destination": "/admin/login.html" },
+    { "source": "/admin/prospects", "destination": "/admin/prospects.html" },
+    { "source": "/admin/calls", "destination": "/admin/calls.html" },
     { "source": "/admin", "destination": "/admin/dashboard.html" }
   ],
   "headers": [
     {
       "source": "/api/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     }
+  ],
+  "crons": [
+    { "path": "/api/cron/discover",         "schedule": "0 13 * * *" },
+    { "path": "/api/cron/rate",             "schedule": "30 13 * * *" },
+    { "path": "/api/cron/enrich",           "schedule": "0 14 * * *" },
+    { "path": "/api/cron/generate-scripts", "schedule": "30 14 * * *" },
+    { "path": "/api/cron/dial",             "schedule": "0 15 * * *" },
+    { "path": "/api/cron/daily-summary",    "schedule": "0 22 * * *" }
   ]
 }

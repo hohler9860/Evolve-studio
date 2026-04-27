@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "forever-focused",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/henryohler/Desktop/Projects & Stuff/evolve-studio/Projects Evolve/forever-focused-driving' && node server.js"],
+      "port": 3000
+    }
+  ]
+}

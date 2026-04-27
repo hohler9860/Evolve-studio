@@ -1,4 +1,4 @@
-const { getSQL } = require('../lib/db');
+const { getDB } = require('../lib/db');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,13 +17,15 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const sql = getSQL();
-    const rows = await sql`
-      INSERT INTO leads (name, business, email, phone, link)
-      VALUES (${name}, ${business}, ${email}, ${phone || ''}, ${link || ''})
-      RETURNING id
-    `;
-    res.json({ success: true, id: rows[0].id });
+    const db = getDB();
+    const { data, error } = await db
+      .from('leads')
+      .insert({ name, business, email, phone: phone || '', link: link || '' })
+      .select('id')
+      .single();
+
+    if (error) throw error;
+    res.json({ success: true, id: data.id });
   } catch (err) {
     console.error('Error saving lead:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });

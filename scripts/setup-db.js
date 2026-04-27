@@ -1,45 +1,55 @@
-// Run this once to create the leads table in your Neon Postgres database.
-// Usage: DATABASE_URL=your_neon_url node scripts/setup-db.js
+// One-shot migration runner for the new Supabase project.
+// Reads supabase/migrations/*.sql in order and applies them via a direct
+// Postgres connection using the project's connection string.
+//
+// Usage:  DATABASE_URL=postgres://... node scripts/setup-db.js
+//         (DATABASE_URL is the "Connection string" → "Direct connection" from
+//          the Supabase project Settings → Database page.)
+//
+// Idempotent: every migration uses `create ... if not exists` / `do $$ begin ... exception when duplicate_object`
+// patterns, so re-running the script is safe.
 
-const { neon } = require('@neondatabase/serverless');
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client } = require('pg');
 
-async function setup() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    console.error('ERROR: DATABASE_URL environment variable is not set.');
-    console.error('Usage: DATABASE_URL=your_neon_url node scripts/setup-db.js');
+async function main() {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    console.error('ERROR: DATABASE_URL not set.');
+    console.error('Find it in Supabase: Project Settings → Database → Connection string (Direct).');
     process.exit(1);
   }
 
-  const sql = neon(databaseUrl);
+  const dir = path.join(__dirname, '..', 'supabase', 'migrations');
+  if (!fs.existsSync(dir)) {
+    console.error(`ERROR: migrations directory not found at ${dir}`);
+    process.exit(1);
+  }
 
-  console.log('Creating leads table...');
-  await sql`
-    CREATE TABLE IF NOT EXISTS leads (
-      id SERIAL PRIMARY KEY,
-      name TEXT NOT NULL,
-      business TEXT NOT NULL,
-      email TEXT NOT NULL,
-      phone TEXT DEFAULT '',
-      link TEXT DEFAULT '',
-      created_at TIMESTAMPTZ DEFAULT NOW(),
-      status TEXT DEFAULT 'new',
-      notes TEXT DEFAULT ''
-    )
-  `;
+  const files = fs.readdirSync(dir).filter(f => f.endsWith('.sql')).sort();
+  if (!files.length) {
+    console.error('ERROR: no .sql files in migrations directory.');
+    process.exit(1);
+  }
 
-  console.log('Creating indexes...');
-  await sql`CREATE INDEX IF NOT EXISTS idx_leads_status ON leads (status)`;
-  await sql`CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads (created_at)`;
+  const client = new Client({ connectionString: url, ssl: { rejectUnauthorized: false } });
+  await client.connect();
 
-  console.log('Database setup complete!');
+  for (const file of files) {
+    console.log(`→ applying ${file}`);
+    const sql = fs.readFileSync(path.join(dir, file), 'utf8');
+    await client.query(sql);
+  }
 
-  // Show current row count
-  const rows = await sql`SELECT COUNT(*) as count FROM leads`;
-  console.log(`Current leads in database: ${rows[0].count}`);
+  // Sanity check
+  const { rows } = await client.query('select count(*)::int as count from leads');
+  console.log(`✓ migrations applied. leads count: ${rows[0].count}`);
+
+  await client.end();
 }
 
-setup().catch(err => {
+main().catch(err => {
   console.error('Setup failed:', err);
   process.exit(1);
 });

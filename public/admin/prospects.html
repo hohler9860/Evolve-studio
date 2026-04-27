@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prospects | evolve studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0c0e14;
+      --bg-alt: #111318;
+      --bg-card: #14161e;
+      --text: #f0f0f5;
+      --text-secondary: #9ca3b4;
+      --text-muted: #5c6478;
+      --border: rgba(255, 255, 255, 0.06);
+      --accent: #3b82f6;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+      min-height: 100vh;
+    }
+
+    /* --- Top bar --- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(12, 14, 20, 0.8);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-logo {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .topbar-logo span { font-weight: 400; color: var(--text-secondary); }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-right a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .topbar-right a:hover { color: var(--text); }
+
+    .btn-logout {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    /* --- Main content --- */
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .dash-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .dash-sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    /* --- Stats cards --- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .stat-value.green { color: var(--green); }
+    .stat-value.yellow { color: var(--yellow); }
+    .stat-value.blue { color: var(--accent); }
+    .stat-value.red { color: var(--red); }
+
+    /* --- Filters bar --- */
+    .filters-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .filter-select {
+      font-size: 13px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text);
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .filter-select:hover { border-color: rgba(255, 255, 255, 0.12); }
+    .filter-select:focus { border-color: var(--accent); }
+
+    .filter-btn {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    /* --- Table header (right-aligned chip filters) --- */
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .table-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .table-stats {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .table-wrap {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    tbody td {
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    td strong, .biz-name {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .biz-meta {
+      color: var(--text-muted);
+      font-size: 11px;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .biz-meta a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .biz-meta a:hover { color: var(--text); text-decoration: underline; }
+
+    /* --- Rating badge --- */
+    .rating {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 100px;
+      letter-spacing: -0.01em;
+    }
+    .rating.r1, .rating.r2, .rating.r3 {
+      background: rgba(239, 68, 68, 0.12);
+      color: #f87171;
+    }
+    .rating.r4, .rating.r5, .rating.r6 {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+    }
+    .rating.r7, .rating.r8 {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+    }
+    .rating.r9, .rating.r10 {
+      background: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+    }
+
+    .selling-point { color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+    .issue { color: #f87171; font-size: 11px; line-height: 1.4; }
+
+    .screenshot {
+      width: 90px;
+      height: 60px;
+      object-fit: cover;
+      object-position: top;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .no-shot {
+      width: 90px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* --- Action buttons --- */
+    .action-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .action-btn-pill:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .action-btn-pill.call:hover {
+      background: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    .action-btn-pill.skip:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .empty-state, .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state p { font-size: 0.95rem; }
+
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard { padding: 20px 16px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .topbar { padding: 12px 16px; }
+      .table-wrap { overflow-x: auto; }
+      table { min-width: 900px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-logo">evolve <span>studio</span></div>
+    <div class="topbar-right">
+      <a href="/admin/dashboard">Leads</a>
+      <a href="/admin/prospects" style="color:#fff">Prospects</a>
+      <a href="/admin/calls">Calls</a>
+      <a href="/">View website</a>
+      <a href="#" class="btn-logout" id="logout">Sign out</a>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <h1 class="dash-title">Prospects</h1>
+    <p class="dash-sub">Discovered local businesses, rated by AI. Lower scores = bigger redesign opportunity.</p>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total prospects</div>
+        <div class="stat-value" id="stat-total">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Catastrophic ≤3</div>
+        <div class="stat-value red" id="stat-catastrophic">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Callable ≤6</div>
+        <div class="stat-value yellow" id="stat-callable">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">With phone</div>
+        <div class="stat-value blue" id="stat-with-phone">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Today</div>
+        <div class="stat-value green" id="stat-today">-</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-row">
+      <span class="filter-label">Region</span>
+      <select class="filter-select" id="region">
+        <option value="">All</option>
+        <option value="boston">Boston</option>
+        <option value="westchester">Westchester</option>
+      </select>
+      <span class="filter-label">Max rating</span>
+      <select class="filter-select" id="max_rating">
+        <option value="">Any</option>
+        <option value="3">≤ 3 (catastrophic)</option>
+        <option value="5">≤ 5 (clear opportunity)</option>
+        <option value="6" selected>≤ 6 (default)</option>
+        <option value="7">≤ 7</option>
+      </select>
+      <span class="filter-label">Status</span>
+      <select class="filter-select" id="status">
+        <option value="open" selected>Open</option>
+        <option value="disqualified">Disqualified</option>
+        <option value="all">All</option>
+      </select>
+      <button class="filter-btn" id="refresh">Refresh</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-header">
+      <div class="table-title">All Prospects</div>
+      <div class="table-stats" id="table-stats"></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Site</th>
+            <th>Business</th>
+            <th>Rating</th>
+            <th>Issues</th>
+            <th>Selling points</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="prospects-body">
+          <tr><td colspan="6" class="loading">Loading prospects...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const $ = sel => document.querySelector(sel);
+
+    async function authFetch(url, options = {}) {
+      const res = await fetch(url, { credentials: 'include', ...options });
+      if (res.status === 401) {
+        window.location.href = '/admin/login';
+        throw new Error('Unauthorized');
+      }
+      return res;
+    }
+
+    function params() {
+      return new URLSearchParams({
+        region: $('#region').value,
+        max_rating: $('#max_rating').value,
+        status: $('#status').value
+      }).toString();
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[<>&"]/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;' }[c]));
+    }
+
+    async function load() {
+      $('#prospects-body').innerHTML = '<tr><td colspan="6" class="loading">Loading...</td></tr>';
+      try {
+        const res = await authFetch('/api/admin/prospects?' + params());
+        const json = await res.json();
+        render(json);
+        loadStats();
+      } catch (err) {
+        $('#prospects-body').innerHTML = '<tr><td colspan="6" class="empty-state"><p>Failed to load: ' + esc(err.message) + '</p></td></tr>';
+      }
+    }
+
+    async function loadStats() {
+      try {
+        // Pull a wide query to count: all open prospects, no rating cap
+        const res = await authFetch('/api/admin/prospects?status=open&max_rating=10');
+        const json = await res.json();
+        const list = json.prospects || [];
+        const today = new Date().toISOString().slice(0, 10);
+        const ratings = list.map(b => b.site_ratings?.[0]?.rating_1_to_10).filter(r => r != null);
+        const catastrophic = ratings.filter(r => r <= 3).length;
+        const callable = ratings.filter(r => r <= 6).length;
+        const withPhone = list.filter(b => b.phone_e164).length;
+        const todayCount = list.filter(b => (b.created_at || '').slice(0, 10) === today).length;
+        $('#stat-total').textContent = list.length;
+        $('#stat-catastrophic').textContent = catastrophic;
+        $('#stat-callable').textContent = callable;
+        $('#stat-with-phone').textContent = withPhone;
+        $('#stat-today').textContent = todayCount;
+      } catch (err) {
+        console.error('stats failed', err);
+      }
+    }
+
+    function render(json) {
+      $('#table-stats').textContent = `${json.count} result${json.count === 1 ? '' : 's'}`;
+      if (!json.prospects?.length) {
+        $('#prospects-body').innerHTML = '<tr><td colspan="6" class="empty-state"><p>No prospects match these filters.</p></td></tr>';
+        return;
+      }
+      $('#prospects-body').innerHTML = json.prospects.map(b => {
+        const r = b.site_ratings?.[0];
+        const rating = r ? `<span class="rating r${r.rating_1_to_10}">${r.rating_1_to_10}/10</span>` : '<span style="color:var(--text-muted)">—</span>';
+        const screenshot = r?.screenshot_signed_url
+          ? `<img src="${r.screenshot_signed_url}" class="screenshot" loading="lazy">`
+          : '<div class="no-shot">no shot</div>';
+        const issues = (r?.issues || []).slice(0, 2).map(i => `<div class="issue">• ${esc(i)}</div>`).join('') || '<span style="color:var(--text-muted);font-size:11px">—</span>';
+        const points = (r?.selling_points || []).slice(0, 2).map(p => `<div class="selling-point">→ ${esc(p)}</div>`).join('') || '<span style="color:var(--text-muted);font-size:11px">—</span>';
+        const phone = b.phone_e164 ? `<a href="tel:${b.phone_e164}">${b.phone_e164}</a>` : '<span style="color:var(--text-muted)">no phone</span>';
+        const site = b.website_url ? `<a href="${b.website_url}" target="_blank" rel="noopener">site ↗</a>` : '';
+        return `
+          <tr>
+            <td>${screenshot}</td>
+            <td>
+              <div class="biz-name">${esc(b.name)}</div>
+              <div class="biz-meta">${esc(b.category || '')} · ${esc(b.city || '')}, ${esc(b.state || '')}</div>
+              <div class="biz-meta">${phone}${site ? ' · ' + site : ''}</div>
+            </td>
+            <td>${rating}</td>
+            <td>${issues}</td>
+            <td>${points}</td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn-pill call" onclick="triggerCall('${b.id}')" title="Manual dry-run dial">Call</button>
+                <button class="action-btn-pill skip" onclick="disqualify('${b.id}')" title="Skip">Skip</button>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    async function triggerCall(id) {
+      if (!confirm('Dry-run: trigger an outbound AI call to this prospect now?')) return;
+      try {
+        const res = await authFetch('/api/admin/trigger-call', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ business_id: id })
+        });
+        const json = await res.json();
+        alert(json.error || `Queued. Call attempt: ${json.call_attempt_id}`);
+      } catch (err) {
+        alert('Failed: ' + err.message);
+      }
+    }
+
+    async function disqualify(id) {
+      if (!confirm('Mark this prospect as disqualified (manual skip)?')) return;
+      try {
+        await authFetch('/api/admin/prospects?id=' + encodeURIComponent(id), {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ disqualified_reason: 'manual' })
+        });
+        load();
+      } catch (err) {
+        alert('Failed: ' + err.message);
+      }
+    }
+
+    ['region','max_rating','status'].forEach(id => $('#' + id).addEventListener('change', load));
+    $('#refresh').addEventListener('click', load);
+    $('#logout').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' });
+      location.href = '/admin/login';
+    });
+
+    load();
+  </script>
+</body>
+</html>

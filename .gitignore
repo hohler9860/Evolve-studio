@@ -6,3 +6,4 @@ node_modules/
 .DS_Store
 IMG_1537.JPG
 Screenshot*.png
+.secrets/

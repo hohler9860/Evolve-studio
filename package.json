@@ -3,16 +3,36 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev": "vercel dev"
+    "serve": "vercel dev --listen 3000",
+    "test": "node --test tests/*.test.js",
+    "check:env": "node scripts/check-env.js",
+    "db:migrate": "node --env-file=.env scripts/setup-db.js",
+    "seed:campaigns": "node --env-file=.env scripts/seed-campaigns.js",
+    "seed:agent": "node --env-file=.env scripts/seed-agent.js",
+    "provision:twilio": "node --env-file=.env scripts/provision-twilio.js",
+    "dry-run": "node --env-file=.env scripts/dry-run-call.js",
+    "run:discover": "node --env-file=.env scripts/run-cron.js discover",
+    "run:rate":     "node --env-file=.env scripts/run-cron.js rate",
+    "run:enrich":   "node --env-file=.env scripts/run-cron.js enrich",
+    "run:scripts":  "node --env-file=.env scripts/run-cron.js generate-scripts",
+    "prep:test":    "node --env-file=.env scripts/prep-test-prospect.js",
+    "seed:scripts": "node --env-file=.env scripts/seed-all-scripts.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@supabase/supabase-js": "^2.45.4",
     "@vercel/analytics": "^2.0.1",
     "bcryptjs": "^3.0.3",
-    "jose": "^6.0.11",
-    "stripe": "^20.3.1"
+    "googleapis": "^144.0.0",
+    "jose": "^4.15.9",
+    "resend": "^4.0.0",
+    "stripe": "^20.3.1",
+    "twilio": "^5.4.0"
+  },
+  "devDependencies": {
+    "pg": "^8.13.1"
   }
 }
