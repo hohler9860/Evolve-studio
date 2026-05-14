@@ -56,7 +56,7 @@ async function main() {
   const biz = sorted[0];
   if (!biz) {
     console.error('No callable prospects yet. Wait for the rate loop to finish.');
-    console.error(`(got ${candidates?.length || 0} candidates from query but none had site_ratings populated)`);
+    console.error(`(got ${ratings.length} rated rows but ${bizRows?.length || 0} had a phone + were not disqualified)`);
     process.exit(1);
   }
 

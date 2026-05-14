@@ -59,6 +59,25 @@ async function main() {
         },
       },
     },
+    {
+      type: 'webhook',
+      name: 'send_followup',
+      description: 'Send a follow-up email with the booking link mid-call. Use when the prospect says "send me an email", "I will think about it", or "I am driving / busy right now". Always confirm the email address with them before calling this.',
+      api_schema: {
+        url: `${toolBaseUrl}/api/tools/send-followup`,
+        method: 'POST',
+        request_headers: toolSecret ? { Authorization: `Bearer ${toolSecret}` } : {},
+        request_body_schema: {
+          type: 'object',
+          required: ['attendee_email'],
+          properties: {
+            business_id:    { type: 'string', description: 'pass {{business_id}}' },
+            attendee_email: { type: 'string', description: 'prospect email address — confirm spelling on the call before calling this' },
+            attendee_name:  { type: 'string', description: 'prospect first/full name if known' },
+          },
+        },
+      },
+    },
   ];
 
   // Fetch current agent
@@ -85,7 +104,7 @@ async function main() {
     },
   };
 
-  console.log('→ patching agent with 2 tools…');
+  console.log(`→ patching agent with ${tools.length} tools…`);
   const patchRes = await fetch(`https://api.elevenlabs.io/v1/convai/agents/${agentId}`, {
     method: 'PATCH',
     headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json' },
@@ -99,8 +118,7 @@ async function main() {
   }
 
   console.log('✓ tools registered');
-  console.log('  - book_meeting → ' + tools[0].api_schema.url);
-  console.log('  - opt_out      → ' + tools[1].api_schema.url);
+  for (const t of tools) console.log(`  - ${t.name.padEnd(14)} → ${t.api_schema.url}`);
   console.log('');
   console.log('Next: in elevenlabs.io → Agent → Webhooks tab,');
   console.log('  paste post-call URL: ' + toolBaseUrl + '/api/webhooks/elevenlabs');

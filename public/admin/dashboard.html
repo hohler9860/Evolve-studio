@@ -739,7 +739,7 @@
     // --- Update lead status ---
     async function updateStatus(id, status) {
       try {
-        await authFetch(`/api/admin/leads/${id}`, {
+        await authFetch(`/api/admin/leads?id=${encodeURIComponent(id)}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status })
@@ -757,7 +757,7 @@
     async function deleteLead(id) {
       if (!confirm('Delete this lead? This cannot be undone.')) return;
       try {
-        await authFetch(`/api/admin/leads/${id}`, { method: 'DELETE' });
+        await authFetch(`/api/admin/leads?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
         allLeads = allLeads.filter(l => l.id !== id);
         renderLeads();
         loadStats();
