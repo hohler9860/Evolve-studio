@@ -9,6 +9,8 @@
     "db:migrate": "node --env-file=.env scripts/setup-db.js",
     "seed:campaigns": "node --env-file=.env scripts/seed-campaigns.js",
     "seed:agent": "node --env-file=.env scripts/seed-agent.js",
+    "seed:retell": "node --env-file=.env scripts/seed-retell-agent.js",
+    "register:retell": "node --env-file=.env scripts/register-retell-tools.js",
     "provision:twilio": "node --env-file=.env scripts/provision-twilio.js",
     "dry-run": "node --env-file=.env scripts/dry-run-call.js",
     "run:discover": "node --env-file=.env scripts/run-cron.js discover",

@@ -3,6 +3,7 @@
 
 const handlers = {
   'elevenlabs': require('../../lib/handlers/webhooks/elevenlabs'),
+  'retell':     require('../../lib/handlers/webhooks/retell'),
   'cal':        require('../../lib/handlers/webhooks/cal'),
   'twilio':     require('../../lib/handlers/webhooks/twilio'),
 };

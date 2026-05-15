@@ -6,7 +6,7 @@
 
 const { getDB } = require('../../lib/db');
 const { requireAuth } = require('../../lib/auth');
-const { initiateOutboundCall } = require('../../lib/elevenlabs');
+const { initiateOutboundCall, getProvider } = require('../../lib/voice');
 const { isCallable } = require('../../lib/compliance');
 
 module.exports = async function handler(req, res) {
@@ -74,10 +74,10 @@ module.exports = async function handler(req, res) {
       },
     });
 
-    await db.from('call_attempts').update({
-      twilio_call_sid: result.callSid,
-      elevenlabs_conversation_id: result.conversation_id,
-    }).eq('id', attempt.id);
+    const providerUpdate = getProvider() === 'retell'
+      ? { twilio_call_sid: result.callSid, retell_call_id: result.conversation_id }
+      : { twilio_call_sid: result.callSid, elevenlabs_conversation_id: result.conversation_id };
+    await db.from('call_attempts').update(providerUpdate).eq('id', attempt.id);
 
     res.json({
       ok: true,

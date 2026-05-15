@@ -9,7 +9,7 @@
 // If BUSINESS_ID is provided, uses that business's actual rating + script.
 // Otherwise uses a hard-coded fake.
 
-const { initiateOutboundCall } = require('../lib/elevenlabs');
+const { initiateOutboundCall, getProvider } = require('../lib/voice');
 const { createClient } = require('@supabase/supabase-js');
 
 async function main() {
@@ -56,18 +56,12 @@ async function main() {
     };
   } else {
     dynamicVars = {
-      business_name: 'Acme Plumbing (TEST)',
+      business_name: 'Acme Plumbing',
       owner_first_name: 'Henry',
       city: 'Boston',
-      rating: 4,
-      top_issue: 'site does not load on mobile',
-      selling_point_1: 'we add online booking with same-day appointment slots',
-      selling_point_2: 'you have 200+ Google reviews invisible on your current site',
-      opener: 'Hi Henry, this is an AI assistant calling on behalf of Henry at Evolve Studio — this call is recorded. Got 30 seconds for a quick question about your website?',
-      talking_points: 'site is slow on mobile | no booking flow | reviews not visible',
-      objection_handlers: '"already have a guy" → great, anyone reviewing performance lately? | "send an email" → sure, what is the best email to send a 90-second mockup video to?',
-      closer: 'I will mock up a sample homepage before we hop on. Cool if I send a Calendar link?',
-      booking_link: 'https://cal.com/evolvestudio/15min',
+      category: 'plumbing',
+      phone: to,
+      specific_observation: "I pulled up your site this morning and it just didn't load on my phone — and you've got over 200 five-star Google reviews, so you're clearly doing the work, the site just isn't catching the calls",
       business_id: 'dry-run-test',
     };
   }
@@ -93,17 +87,18 @@ async function main() {
     else attemptId = attempt.id;
   }
 
-  console.log(`→ dialing ${to}…`);
+  console.log(`→ dialing ${to} via ${getProvider()}…`);
   const result = await initiateOutboundCall({ to_number: to, dynamic_variables: dynamicVars });
   console.log('✓ initiated');
-  console.log('  conversation_id:', result.conversation_id);
-  console.log('  call_sid:', result.callSid);
+  console.log('  provider:        ', result.provider);
+  console.log('  conversation_id: ', result.conversation_id);
+  console.log('  call_sid:        ', result.callSid);
 
   if (attemptId) {
-    await db.from('call_attempts').update({
-      twilio_call_sid: result.callSid,
-      elevenlabs_conversation_id: result.conversation_id,
-    }).eq('id', attemptId);
+    const providerUpdate = result.provider === 'retell'
+      ? { twilio_call_sid: result.callSid, retell_call_id: result.conversation_id }
+      : { twilio_call_sid: result.callSid, elevenlabs_conversation_id: result.conversation_id };
+    await db.from('call_attempts').update(providerUpdate).eq('id', attemptId);
     console.log('✓ call_attempt logged:', attemptId);
   }
 }
