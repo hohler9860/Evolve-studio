@@ -158,6 +158,7 @@ h1, h2, h3, h4, p { margin: 0; }
   display: inline-block;
   color: var(--fg);
   flex-shrink: 0;
+  border-radius: 4px;
 }
 .nav-links {
   display: flex;
@@ -492,19 +493,9 @@ h1, h2, h3, h4, p { margin: 0; }
 }
 .work-thumb-evolve {
   background:
-    radial-gradient(circle at 30% 30%, rgba(120,200,160,0.18), transparent 50%),
-    linear-gradient(135deg, #0a0a0a 0%, #181818 50%, #0a0a0a 100%);
+    url('assets/icon-3d-embossed-512.png') center / 70% auto no-repeat,
+    linear-gradient(135deg, #050505 0%, #141414 50%, #050505 100%);
   position: relative;
-}
-.work-thumb-evolve::before {
-  content: '◆ COLD CALLER';
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  color: rgba(120, 200, 160, 0.5);
-  font-family: var(--font-mono);
-  font-size: clamp(18px, 2.5vw, 28px);
-  font-weight: 500;
-  letter-spacing: 0.1em;
 }
 .work-thumb-soon {
   background:

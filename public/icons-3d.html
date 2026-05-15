@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Icon 01 in 3D — Evolve Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a; --bg-card: #111; --fg: #fafafa; --fg-muted: #8a8a8a;
+  --border: rgba(255,255,255,0.08);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: 'Geist', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased; line-height: 1.5;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 64px 24px; }
+header { margin-bottom: 48px; }
+h1 { font-size: 44px; letter-spacing: -0.03em; font-weight: 600; margin: 0 0 12px; line-height: 1.05; }
+.sub { color: var(--fg-muted); margin: 0; font-size: 17px; max-width: 60ch; }
+.mono-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px; border: 1px solid var(--border); border-radius: 99px;
+  background: var(--bg-card); font-family: 'Geist Mono', monospace; font-size: 11px;
+  margin-bottom: 20px;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 24px;
+}
+.card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px; display: flex; flex-direction: column; gap: 16px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.18); }
+.stage {
+  background: #000; border-radius: 12px; overflow: hidden;
+  aspect-ratio: 1 / 1; position: relative;
+  border: 1px solid var(--border);
+}
+.stage img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.meta { display: flex; justify-content: space-between; align-items: baseline; }
+.name { font-size: 18px; font-weight: 600; letter-spacing: -0.015em; }
+.num { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--fg-muted); }
+.desc { color: var(--fg-muted); font-size: 13px; line-height: 1.55; }
+.pick { color: #4ade80; font-family: 'Geist Mono', monospace; font-size: 11px; margin-top: 4px; }
+.foot {
+  margin-top: 56px; padding: 24px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  font-size: 14px; color: var(--fg-muted); line-height: 1.7;
+}
+.foot strong { color: var(--fg); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="mono-pill"><span class="dot"></span> Generated via Higgsfield · nano_banana_2 · 4 renders · 8 credits</span>
+    <h1>Icon 01 — in 3D.</h1>
+    <p class="sub">Four material treatments of the same asterisk-star concept. AI-rendered, hyperrealistic, isolated on black. Pick the one with the right vibe and I'll either use the PNG as-is for the favicon + meta image, or trace it back to SVG for the nav (so it scales clean).</p>
+  </header>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="stage"><img src="assets/icon-3d-chrome.png" alt="Chrome variant"></div>
+      <div class="meta">
+        <span class="name">Chrome</span>
+        <span class="num">3D · A</span>
+      </div>
+      <p class="desc">Polished mirror chrome with soft reflections. Premium tech / luxury feel. Reads as Apple-product-shot energy.</p>
+      <p class="pick">→ Strongest "premium tech" read</p>
+    </div>
+
+    <div class="card">
+      <div class="stage"><img src="assets/icon-3d-glass.png" alt="Glass variant"></div>
+      <div class="meta">
+        <span class="name">Glass</span>
+        <span class="num">3D · B</span>
+      </div>
+      <p class="desc">Frosted translucent material with subtle internal glow. iOS 17 / visionOS aesthetic. Soft and approachable.</p>
+      <p class="pick">→ Best if you want "soft AI" vibes</p>
+    </div>
+
+    <div class="card">
+      <div class="stage"><img src="assets/icon-3d-matte.png" alt="Matte variant"></div>
+      <div class="meta">
+        <span class="name">Matte Ceramic</span>
+        <span class="num">3D · C</span>
+      </div>
+      <p class="desc">Pure matte white ceramic, diffused studio light, subtle ambient occlusion. Reads as Anthropic / Cursor energy.</p>
+      <p class="pick">→ My top pick — closest to Anthropic logo aesthetic</p>
+    </div>
+
+    <div class="card">
+      <div class="stage"><img src="assets/icon-3d-embossed.png" alt="Embossed variant"></div>
+      <div class="meta">
+        <span class="name">Embossed</span>
+        <span class="num">3D · D</span>
+      </div>
+      <p class="desc">Carved/raised into a monolithic dark block, dramatic side lighting catches the bevels. Architectural minimalism.</p>
+      <p class="pick">→ Best for "I build by hand" positioning</p>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <p style="margin: 0 0 12px;"><strong>How this gets used:</strong></p>
+    <p style="margin: 0 0 12px;">The 3D PNG is great for the <strong>favicon</strong> (where it'll be tiny and the depth reads as detail) and the <strong>OG/social share image</strong> (large enough to show off the render). For the nav header at 18px, we'd still use the flat SVG so it scales razor-clean. So your final icon is actually a duo: flat SVG for the nav, 3D render for everything else.</p>
+    <p style="margin: 0;"><strong>My pick: C (Matte Ceramic)</strong> — most timeless, closest to Anthropic's design language, won't look dated in 2 years. Chrome (A) is striking now but skews toward 2024 Apple energy. Glass (B) is iOS-y. Embossed (D) is bold but reads more "construction firm" than "AI studio." Let me know which one and I'll wire it in.</p>
+  </div>
+</div>
+</body>
+</html>
