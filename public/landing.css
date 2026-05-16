@@ -680,6 +680,15 @@ h1, h2, h3, h4, p { margin: 0; }
 }
 
 /* ---------- PRICING ---------- */
+.section-head-pricing { max-width: 880px; }
+.section-head-pricing h2 .price-anchor {
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, var(--fg) 0%, var(--fg-muted) 140%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
