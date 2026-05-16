@@ -599,6 +599,66 @@ h1, h2, h3, h4, p { margin: 0; }
   font-size: var(--fs-sm);
 }
 
+/* ---------- MANIFESTO / QUOTE BLOCK ---------- */
+.section-quote {
+  padding: clamp(96px, 14vw, 200px) 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.quote-block {
+  max-width: 1020px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vw, 48px);
+}
+.quote-label {
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.quote-label::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  opacity: 0.55;
+  border-radius: 1px;
+}
+.quote-text {
+  font-size: clamp(28px, 4.2vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  color: var(--fg);
+  max-width: 22ch;
+}
+.quote-text::before { content: "\201C"; margin-right: 0.05em; color: var(--fg-muted); }
+.quote-text::after  { content: "\201D"; margin-left: 0.05em; color: var(--fg-muted); }
+.quote-cite {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  max-width: 360px;
+}
+.quote-author {
+  font-size: var(--fs-base);
+  font-weight: 500;
+  color: var(--fg);
+}
+.quote-role {
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+}
+
 /* ---------- SERVICES GRID ---------- */
 .services-grid {
   display: grid;
