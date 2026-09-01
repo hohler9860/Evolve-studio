@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Schedule Admin — Forever Focused Driving Academy</title>
+<style>
+  :root {
+    --black: #0a0a0a; --panel: #141414; --border: #262626;
+    --white: #f5f5f5; --g400: #9a9a9a; --g500: #6f6f6f;
+    --green: #4ade80; --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--black); color: var(--white);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    min-height: 100vh; padding: 24px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.01em; }
+  .sub { color: var(--g500); font-size: 0.82rem; margin-top: 4px; }
+  .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--g400); }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 20px; }
+  .card h2 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+  .card .hint { color: var(--g500); font-size: 0.8rem; margin-bottom: 14px; line-height: 1.5; }
+  button {
+    background: var(--white); color: var(--black); border: none; border-radius: 8px;
+    padding: 10px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--white); border: 1px solid var(--border); }
+  button.danger { background: transparent; color: var(--red); border: 1px solid var(--border); padding: 6px 10px; font-size: 0.75rem; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  input, select {
+    background: var(--black); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--white); padding: 10px 12px; font-size: 0.9rem; outline: none;
+  }
+  input:focus { border-color: var(--g400); }
+  /* Login */
+  #login { max-width: 340px; margin: 15vh auto 0; text-align: center; }
+  #login input { width: 100%; margin: 16px 0 12px; text-align: center; }
+  #login button { width: 100%; }
+  .err { color: var(--red); font-size: 0.8rem; margin-top: 10px; min-height: 1em; }
+  /* Weekly grid */
+  .day-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .day-row:last-child { border-bottom: none; }
+  .day-name { width: 44px; flex-shrink: 0; padding-top: 7px; }
+  .hours { display: flex; flex-wrap: wrap; gap: 6px; }
+  .hr-btn {
+    background: transparent; color: var(--g400); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 9px; font-size: 0.75rem; font-weight: 500;
+  }
+  .hr-btn.on { background: var(--white); color: var(--black); border-color: var(--white); }
+  /* Overrides */
+  .ov-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .ov-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; flex-wrap: wrap; }
+  .ov-item:last-child { border-bottom: none; }
+  .ov-item .tag { color: var(--g400); }
+  /* Bookings */
+  .bk-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; flex-wrap: wrap; }
+  .bk-item:last-child { border-bottom: none; }
+  .bk-meta { color: var(--g500); font-size: 0.78rem; }
+  /* Feed */
+  .feed-url { display: flex; gap: 8px; margin: 10px 0; }
+  .feed-url input { flex: 1; font-size: 0.78rem; color: var(--g400); }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; font-size: 0.82rem; color: var(--g400); }
+  details ol { margin: 10px 0 4px 20px; color: var(--g400); font-size: 0.82rem; line-height: 1.7; }
+  .savebar { position: sticky; bottom: 16px; margin-top: 20px; display: none; justify-content: flex-end; gap: 10px; }
+  .savebar.show { display: flex; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--white); color: var(--black); padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div id="login">
+  <h1>Schedule Admin</h1>
+  <p class="sub">Forever Focused Driving Academy</p>
+  <input type="password" id="pw" placeholder="Password" autocomplete="current-password">
+  <button onclick="login()">Sign In</button>
+  <div class="err" id="loginErr"></div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <h1>Schedule Admin</h1>
+  <p class="sub">Only the hours you turn on here show as bookable on the website.</p>
+
+  <div class="card">
+    <h2>Weekly Hours</h2>
+    <p class="hint">Tap the hours you're available each week. These repeat every week automatically.</p>
+    <div id="weekly"></div>
+  </div>
+
+  <div class="card">
+    <h2>Specific Dates</h2>
+    <p class="hint">Override any single date — take a day off, or open custom hours that differ from your usual week.</p>
+    <div class="ov-form">
+      <input type="date" id="ovDate">
+      <button class="ghost" onclick="addOverride('closed')">Mark Closed</button>
+      <button class="ghost" onclick="addOverride('custom')">Custom Hours</button>
+    </div>
+    <div id="ovList"></div>
+  </div>
+
+  <div class="card">
+    <h2>Upcoming Lessons</h2>
+    <p class="hint">Everything booked through the website. Cancelling frees the slot back up.</p>
+    <div id="bkList"></div>
+  </div>
+
+  <div class="card">
+    <h2>Your Calendar Hookup</h2>
+    <p class="hint">Subscribe once with this private link and every new booking shows up in your calendar automatically. Works with Google Calendar, Apple Calendar, and Outlook.</p>
+    <div class="feed-url"><input id="feedUrl" readonly><button class="ghost" onclick="copyFeed()">Copy</button></div>
+    <details>
+      <summary>How to subscribe (one time)</summary>
+      <ol>
+        <li><strong>Google Calendar:</strong> On a computer, go to calendar.google.com → Settings (gear) → Add calendar → From URL → paste the link → Add calendar.</li>
+        <li><strong>Apple Calendar (iPhone/Mac):</strong> Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar → paste the link.</li>
+        <li><strong>Outlook:</strong> Calendar → Add calendar → Subscribe from web → paste the link.</li>
+      </ol>
+    </details>
+  </div>
+
+  <div class="savebar" id="savebar">
+    <button onclick="saveSchedule()" id="saveBtn">Save Changes</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const HOURS = [7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let key = sessionStorage.getItem('ffda_key') || '';
+let schedule = { weekly: {}, overrides: {} };
+let dirty = false;
+
+function hourLabel(h){ const x=h>12?h-12:(h===0?12:h); return x+(h>=12?'pm':'am'); }
+function api(path, opts={}){ opts.headers = Object.assign({'Content-Type':'application/json','x-admin-key':key}, opts.headers||{}); return fetch(path, opts).then(r=>{ if(r.status===401){ sessionStorage.removeItem('ffda_key'); location.reload(); } return r.json(); }); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+function markDirty(){ dirty=true; document.getElementById('savebar').classList.add('show'); }
+
+async function login(){
+  const pw = document.getElementById('pw').value;
+  const res = await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+  if(res.ok){ key = pw; sessionStorage.setItem('ffda_key', key); boot(); }
+  else { document.getElementById('loginErr').textContent = 'Wrong password.'; }
+}
+document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') login(); });
+
+async function boot(){
+  document.getElementById('login').hidden = true;
+  document.getElementById('app').hidden = false;
+  schedule = await api('/api/admin/schedule');
+  schedule.weekly = schedule.weekly || {};
+  schedule.overrides = schedule.overrides || {};
+  renderWeekly(); renderOverrides(); loadBookings(); loadFeed();
+}
+
+function renderWeekly(){
+  const el = document.getElementById('weekly');
+  el.innerHTML = '';
+  for(let d=0; d<7; d++){
+    const row = document.createElement('div'); row.className='day-row';
+    const name = document.createElement('div'); name.className='day-name mono'; name.textContent = DAYS[d];
+    const hours = document.createElement('div'); hours.className='hours';
+    const set = new Set(schedule.weekly[String(d)]||[]);
+    HOURS.forEach(h=>{
+      const b = document.createElement('button');
+      b.className = 'hr-btn'+(set.has(h)?' on':'');
+      b.textContent = hourLabel(h);
+      b.onclick = ()=>{
+        const cur = new Set(schedule.weekly[String(d)]||[]);
+        cur.has(h) ? cur.delete(h) : cur.add(h);
+        schedule.weekly[String(d)] = [...cur].sort((a,b)=>a-b);
+        b.classList.toggle('on');
+        markDirty();
+      };
+      hours.appendChild(b);
+    });
+    row.appendChild(name); row.appendChild(hours); el.appendChild(row);
+  }
+}
+
+function renderOverrides(){
+  const el = document.getElementById('ovList');
+  const entries = Object.entries(schedule.overrides).sort((a,b)=>a[0].localeCompare(b[0]));
+  el.innerHTML = entries.length ? '' : '<p class="hint" style="margin:0">No date overrides set.</p>';
+  entries.forEach(([date, ov])=>{
+    const row = document.createElement('div'); row.className='ov-item';
+    const label = document.createElement('span');
+    const nice = new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+    label.innerHTML = `<strong>${nice}</strong> <span class="tag">${ov.closed ? 'Closed' : 'Open: '+(ov.hours||[]).map(hourLabel).join(', ')}</span>`;
+    const del = document.createElement('button'); del.className='danger'; del.textContent='Remove';
+    del.onclick = ()=>{ delete schedule.overrides[date]; renderOverrides(); markDirty(); };
+    row.appendChild(label); row.appendChild(del); el.appendChild(row);
+  });
+}
+
+function addOverride(kind){
+  const date = document.getElementById('ovDate').value;
+  if(!date){ toast('Pick a date first'); return; }
+  if(kind==='closed'){
+    schedule.overrides[date] = { closed: true };
+  } else {
+    const input = prompt('Which hours are open that day? Use 24-hour start times separated by commas.\nExample: 9,10,14,15 means 9am, 10am, 2pm, 3pm');
+    if(input===null) return;
+    const hours = input.split(',').map(s=>parseInt(s.trim())).filter(h=>Number.isInteger(h)&&h>=5&&h<=21);
+    schedule.overrides[date] = { hours };
+  }
+  renderOverrides(); markDirty();
+}
+
+async function saveSchedule(){
+  const btn = document.getElementById('saveBtn'); btn.disabled = true;
+  const res = await api('/api/admin/schedule',{method:'PUT',body:JSON.stringify(schedule)});
+  btn.disabled = false;
+  if(res.success){ dirty=false; document.getElementById('savebar').classList.remove('show'); toast('Saved — the website is updated'); }
+  else toast('Save failed, try again');
+}
+
+async function loadBookings(){
+  const el = document.getElementById('bkList');
+  const data = await api('/api/admin/bookings');
+  const upcoming = (data.bookings||[]).filter(b=>b.date >= new Date().toISOString().slice(0,10));
+  el.innerHTML = upcoming.length ? '' : '<p class="hint" style="margin:0">No upcoming lessons booked.</p>';
+  upcoming.forEach(b=>{
+    const row = document.createElement('div'); row.className='bk-item';
+    const nice = new Date(b.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const info = document.createElement('div');
+    info.innerHTML = `<strong>${nice} · ${b.time}</strong> — ${b.name}<div class="bk-meta">${b.serviceLabel||b.service} · ${b.phone} · ${b.email}</div>`;
+    const del = document.createElement('button'); del.className='danger'; del.textContent='Cancel';
+    del.onclick = async ()=>{
+      if(!confirm(`Cancel ${b.name}'s lesson on ${nice} at ${b.time}? The slot opens back up on the site.`)) return;
+      await api('/api/admin/bookings/'+b.id,{method:'DELETE'});
+      toast('Booking cancelled'); loadBookings();
+    };
+    row.appendChild(info); row.appendChild(del); el.appendChild(row);
+  });
+}
+
+async function loadFeed(){
+  const data = await api('/api/admin/feed-url');
+  document.getElementById('feedUrl').value = data.url || 'Feed not configured — ask Henry';
+}
+function copyFeed(){
+  const el = document.getElementById('feedUrl');
+  navigator.clipboard.writeText(el.value).then(()=>toast('Link copied'));
+}
+
+if(key){ boot(); }
+</script>
+</body>
+</html>
