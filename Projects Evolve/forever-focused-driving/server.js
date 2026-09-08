@@ -47,12 +47,13 @@ const SITE_URL = process.env.SITE_URL || 'https://foreverfocuseddriving.com';
 
 // Service definitions with durations and pricing
 const SERVICES = {
-  '1hr-city':          { label: '1-Hour City Driving Lesson',     duration: 60,  price: '$70' },
-  '2hr-city':          { label: '2-Hour City Driving Lesson',     duration: 120, price: '$140' },
-  '2hr-private':       { label: '2-Hour Private Lesson',          duration: 120, price: '$220' },
-  'road-exam-prep':    { label: 'Road Exam Prep / Maneuvers',     duration: 120, price: '$140' },
-  'highway':           { label: 'Highway Lesson',                 duration: 120, price: '$220' },
-  'road-test-sponsor': { label: 'Road Test Sponsorship',          duration: 120, price: '$180' },
+  '1hr-city':          { label: '1-Hour City Driving Lesson',     duration: 60,  price: '$80' },
+  '2hr-city':          { label: '2-Hour City Driving Lesson',     duration: 120, price: '$160' },
+  '1hr-private':       { label: '1-Hour Private Lesson',          duration: 60,  price: '$120' },
+  '2hr-private':       { label: '2-Hour Private Lesson',          duration: 120, price: '$240' },
+  'road-exam-prep':    { label: 'Road Exam Prep / Maneuvers',     duration: 120, price: '$160' },
+  'highway':           { label: 'Highway Lesson',                 duration: 120, price: '$240' },
+  'road-test-sponsor': { label: 'Road Test Sponsorship',          duration: 120, price: 'from $180' },
 };
 
 // ─── Data Store (JSON files) ─────────────────────────────────────────────────

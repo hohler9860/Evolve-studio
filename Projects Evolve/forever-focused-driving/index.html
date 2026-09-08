@@ -384,7 +384,7 @@
     .services { padding: 100px 0; }
     .services-header { text-align: center; margin-bottom: 56px; }
     .services-header .section-desc { margin: 0 auto; }
-    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .service-card {
       border-radius: 16px;
       padding: 28px 22px;
@@ -417,6 +417,61 @@
       padding: 4px 10px; background: var(--black); color: var(--white);
       border-radius: 6px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px;
     }
+
+    .service-link {
+      display: block; margin-top: 12px; font-size: 0.8rem; font-weight: 600;
+      color: var(--g700); text-decoration: none;
+    }
+    .service-link:hover { color: var(--black); }
+    .lesson-details {
+      margin-top: 48px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    }
+    .lesson-detail {
+      padding: 28px 26px; border: 1px solid var(--g200); border-radius: 16px; background: var(--white);
+    }
+    .lesson-detail-head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px;
+    }
+    .lesson-detail h3 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+    .lesson-price {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; padding: 4px 10px;
+      background: var(--black); color: var(--white); border-radius: 6px; white-space: nowrap;
+    }
+    .lesson-detail p { color: var(--g600); font-size: 0.9rem; line-height: 1.7; margin-bottom: 10px; }
+    .lesson-detail p:last-child { margin-bottom: 0; }
+    .lesson-note { font-weight: 600; color: var(--g900) !important; }
+
+    /* ─── Road Test ─── */
+    .road-test { padding: 100px 0; background: var(--g50); border-top: 1px solid var(--g200); border-bottom: 1px solid var(--g200); }
+    .road-test-header { text-align: center; margin-bottom: 48px; }
+    .road-test-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 32px; align-items: start; margin-bottom: 72px; }
+    .road-test-copy p { color: var(--g600); font-size: 0.95rem; line-height: 1.75; margin-bottom: 14px; }
+    .road-test-copy ul { margin: 0 0 16px 20px; color: var(--g700); font-size: 0.95rem; line-height: 1.75; }
+    .road-test-copy li { margin-bottom: 4px; }
+    .road-test-text { color: var(--g900) !important; }
+    .road-test-text a { color: var(--black); }
+    .road-test-side { border-radius: 16px; padding: 28px 24px; position: sticky; top: 100px; }
+    .road-test-side-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--g400); margin-bottom: 10px; }
+    .road-test-side-price { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+    .road-test-side-sub { color: var(--g500); font-size: 0.85rem; margin: 6px 0 18px; }
+    .road-test-side-list { list-style: none; margin: 0 0 22px; padding: 0; }
+    .road-test-side-list li { font-size: 0.88rem; color: var(--g700); padding: 8px 0; border-top: 1px solid var(--g200); }
+    .road-test-side-btn { width: 100%; text-align: center; display: block; }
+    .passes-header { text-align: center; margin-bottom: 28px; }
+    .passes-header .section-desc { margin: 0 auto; }
+    .passes-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px; }
+    .passes-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+    .passes-grid .pass { aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: var(--g200); }
+    .passes-grid .pass img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+    .passes-grid .pass:hover img { transform: scale(1.06); }
+    .passes-grid .pass-empty { display: flex; align-items: center; justify-content: center; color: var(--g400); font-size: 1.1rem; }
+
+    /* ─── Square Book ─── */
+    .square-book { padding: 80px 0; }
+    .square-book-inner { text-align: center; padding: 56px 32px; border-radius: 20px; }
+    .square-book-inner .section-desc { margin: 0 auto 28px; }
+    .square-btn { display: inline-block; padding: 14px 28px; font-size: 0.95rem; }
+    .square-note { margin-top: 14px; font-size: 0.78rem; color: var(--g400); }
 
     /* ─── Areas Served ─── */
     .areas {
@@ -766,9 +821,13 @@
     @media (max-width: 1024px) {
       .services-grid { grid-template-columns: repeat(2, 1fr); }
       .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+      .passes-grid { grid-template-columns: repeat(6, 1fr); }
     }
     @media (max-width: 900px) {
       .why-grid { grid-template-columns: 1fr; gap: 48px; }
+      .road-test-grid { grid-template-columns: 1fr; }
+      .road-test-side { position: static; }
+      .lesson-details { grid-template-columns: 1fr; }
       .why-stats { max-width: 400px; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -783,6 +842,7 @@
       .hero-photo-overlay .cta-small { width: 100%; text-align: center; }
       .services-grid { grid-template-columns: 1fr; }
       .testimonials-grid { grid-template-columns: 1fr; }
+      .passes-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
       .trust-strip .container { gap: 20px; }
       .trust-item { font-size: 0.78rem; }
       .trust-item .icon { width: 32px; height: 32px; font-size: 0.95rem; }
@@ -966,6 +1026,7 @@
     <a href="#" class="logo"><img src="LOGO.png" alt="Forever Focused Driving Academy"></a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
+      <li><a href="#road-test">Road Test</a></li>
       <li><a href="#why-us">Why Us</a></li>
       <li><a href="#areas">Areas</a></li>
       <li><a href="#testimonials">Reviews</a></li>
@@ -1053,40 +1114,119 @@
     <div class="services-grid stagger-children">
       <div class="service-card glass fade-up">
         <div class="service-icon">&#128663;</div>
-        <h3>1-Hour City Lesson</h3>
-        <p>Behind-the-wheel city driving lesson. Pick-ups in Cambridge &amp; Somerville or meet at a convenient T stop.</p>
-        <div class="service-tag">$70 / 1 hr</div>
-      </div>
-      <div class="service-card glass fade-up">
-        <div class="service-icon">&#128663;</div>
-        <h3>2-Hour City Lesson</h3>
-        <p>Extended city driving lesson. More time to build confidence, cover more ground, and reinforce skills.</p>
-        <div class="service-tag">$140 / 2 hrs</div>
+        <h3>City Driving Lessons</h3>
+        <p>Behind-the-wheel instruction based on your individual needs and skill level. Also available to licensed drivers looking for a refresher lesson.</p>
+        <div class="service-tag">$80 / hour</div>
       </div>
       <div class="service-card glass fade-up">
         <div class="service-icon">&#9889;</div>
-        <h3>2-Hour Private Lesson</h3>
-        <p>Picked up anywhere in Cambridge. No other students in the car. Best for nervous or brand new drivers. Bring a translator if needed.</p>
-        <div class="service-tag">$220 / 2 hrs</div>
-      </div>
-      <div class="service-card glass fade-up">
-        <div class="service-icon">&#128203;</div>
-        <h3>Road Exam Prep</h3>
-        <p>Focused on parallel parking, 3-point turns, and all maneuvers required on the road exam. Walk in fully prepared.</p>
-        <div class="service-tag">$140 / 2 hrs</div>
+        <h3>Private Driving Lessons</h3>
+        <p>Completely one-on-one. Only you and your instructor in the vehicle. Popular with beginners, nervous drivers, and anyone who prefers a private learning environment.</p>
+        <div class="service-tag">$120 / hour</div>
       </div>
       <div class="service-card glass fade-up">
         <div class="service-icon">&#128739;</div>
-        <h3>Highway Lesson</h3>
-        <p>Learn to merge, change lanes, and drive confidently at highway speeds. Essential for real-world driving.</p>
-        <div class="service-tag">$220 / 2 hrs</div>
+        <h3>Highway Lessons</h3>
+        <p>Learn to merge, change lanes, and drive confidently at highway speeds. Offered as a mandatory two-hour session.</p>
+        <div class="service-tag">$240 / 2 hours</div>
       </div>
       <div class="service-card glass fade-up">
         <div class="service-icon">&#9989;</div>
         <h3>Road Test Sponsorship</h3>
-        <p>We provide the car for your RMV road test. Everything is taken care of so you can focus on passing.</p>
-        <div class="service-tag">$180</div>
+        <p>Use of our driving school vehicle plus a Forever Focused representative as your sponsor at the Watertown RMV. Other RMV locations available upon request.</p>
+        <div class="service-tag">Starting at $180</div>
+        <a href="#road-test" class="service-link">Full details &rarr;</a>
       </div>
+    </div>
+
+    <div class="lesson-details stagger-children">
+      <div class="lesson-detail fade-up">
+        <div class="lesson-detail-head">
+          <h3>City Driving Lessons</h3>
+          <span class="lesson-price">$80/hour</span>
+        </div>
+        <p>Our standard City Driving lessons provide behind-the-wheel instruction based on each student's individual needs and skill level. Yes, this option is also available to licensed individuals looking for a refresher lesson!</p>
+        <p>Please note that City Driving lessons are not guaranteed to be one-on-one. Depending on the schedule, you may be asked to assist with returning the previous student to their drop-off location, or an underage student may be present to observe the lesson as part of their RMV-required observation hours.</p>
+      </div>
+      <div class="lesson-detail fade-up">
+        <div class="lesson-detail-head">
+          <h3>Private Driving Lessons</h3>
+          <span class="lesson-price">$120/hour</span>
+        </div>
+        <p>Private lessons are completely one-on-one. No other students will be in the vehicle during your scheduled lesson. Only you and your instructor.</p>
+        <p>This option is especially popular with beginners, nervous drivers, or anyone who prefers a more individualized and private learning environment, including licensed individuals looking for a refresher course.</p>
+      </div>
+      <div class="lesson-detail fade-up">
+        <div class="lesson-detail-head">
+          <h3>How Many Lessons Will I Need?</h3>
+        </div>
+        <p>We cannot accurately determine how many lessons a student will need without first assessing their driving skills in person.</p>
+        <p>On average, a complete beginner may require approximately 15 to 20 hours of professional instruction to progress from the beginner stage to being road-test ready.</p>
+        <p>However, every student learns at a different pace. The amount of instruction needed may vary depending on prior driving experience, consistency between lessons, how frequently lessons are scheduled, and how well the student retains and applies previously learned skills.</p>
+        <p>Some students may require fewer hours, while others may benefit from additional instruction.</p>
+        <p class="lesson-note">We offer pickup and drop-off anywhere within Cambridge.</p>
+      </div>
+      <div class="lesson-detail fade-up">
+        <div class="lesson-detail-head">
+          <h3>Highway Lessons</h3>
+          <span class="lesson-price">$240</span>
+        </div>
+        <p>Highway instruction is offered as a mandatory two-hour session for $240.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Road Test Sponsorship + Passes -->
+<section class="road-test" id="road-test">
+  <div class="container">
+    <div class="road-test-header fade-up">
+      <div class="section-label">Road Test Sponsorship</div>
+      <div class="section-title">Road Test Sponsorship<br>Starting at $180</div>
+    </div>
+    <div class="road-test-grid fade-up">
+      <div class="road-test-copy">
+        <p>Road test sponsorship is available at the Watertown RMV for $180 and includes:</p>
+        <ul>
+          <li>Use of our driving school vehicle for your road test</li>
+          <li>A Forever Focused Driving Academy representative serving as your road test sponsor</li>
+        </ul>
+        <p>Road test sponsorship at other RMV locations may also be available upon request. Because Watertown is the closest road test location to our primary service area, it is offered at our lowest sponsorship rate.</p>
+        <p>Sponsorship fees for other RMV locations will increase based on location and travel distance. This additional cost accounts for mileage, fuel, travel time, and the extended amount of time our vehicle and instructor are away from our Cambridge service area, during which we would otherwise be conducting scheduled driving lessons.</p>
+        <p class="road-test-text">Please <strong>TEXT <a href="sms:+16178524179">(617) 852-4179</a></strong> with your requested RMV location for availability and pricing.</p>
+        <p>If you would like additional practice before your road test, you may also book a one- or two-hour driving lesson prior to your test, provided availability permits.</p>
+      </div>
+      <div class="road-test-side glass">
+        <div class="road-test-side-label">Sponsorship includes</div>
+        <div class="road-test-side-price">$180</div>
+        <div class="road-test-side-sub">Watertown RMV</div>
+        <ul class="road-test-side-list">
+          <li>&#10003; Driving school vehicle for your test</li>
+          <li>&#10003; Representative as your sponsor</li>
+          <li>&#10003; Other RMV locations on request</li>
+        </ul>
+        <a href="sms:+16178524179" class="btn btn-primary road-test-side-btn">Text for Availability</a>
+      </div>
+    </div>
+
+    <div class="passes-header fade-up">
+      <div class="section-label">Proven Results</div>
+      <h3 class="passes-title">Students who passed their road test with us</h3>
+      <p class="section-desc">Every one of these is a new licensed driver. This wall keeps growing.</p>
+    </div>
+    <div class="passes-grid" id="passesGrid"></div>
+  </div>
+</section>
+
+<!-- Ready to Book (Square) -->
+<section class="square-book" id="ready-to-book">
+  <div class="container">
+    <div class="square-book-inner glass fade-up">
+      <div class="section-label">Ready to Book?</div>
+      <div class="section-title">Schedule Your Lessons Online</div>
+      <p class="section-desc">View our current availability and schedule your lessons online at your convenience.</p>
+      <a href="https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services" target="_blank" rel="noopener" class="btn btn-primary square-btn">View Availability &amp; Book &rarr;</a>
+      <div class="square-note">Opens our secure Square booking page</div>
     </div>
   </div>
 </section>
@@ -1292,42 +1432,42 @@
             <span class="service-opt-icon">&#128663;</span>
             <span class="service-opt-info">
               <strong>1-Hour City Driving Lesson</strong>
-              <span>$70 &mdash; 1 hr</span>
+              <span>$80 &mdash; 1 hr</span>
             </span>
           </button>
           <button class="service-opt" data-value="2hr-city" onclick="selectService(this)">
             <span class="service-opt-icon">&#128663;</span>
             <span class="service-opt-info">
               <strong>2-Hour City Driving Lesson</strong>
-              <span>$140 &mdash; 2 hrs</span>
+              <span>$160 &mdash; 2 hrs</span>
+            </span>
+          </button>
+          <button class="service-opt" data-value="1hr-private" onclick="selectService(this)">
+            <span class="service-opt-icon">&#9889;</span>
+            <span class="service-opt-info">
+              <strong>1-Hour Private Lesson</strong>
+              <span>$120 &mdash; completely one-on-one</span>
             </span>
           </button>
           <button class="service-opt" data-value="2hr-private" onclick="selectService(this)">
             <span class="service-opt-icon">&#9889;</span>
             <span class="service-opt-info">
               <strong>2-Hour Private Lesson</strong>
-              <span>$220 &mdash; no other students, best for new drivers</span>
-            </span>
-          </button>
-          <button class="service-opt" data-value="road-exam-prep" onclick="selectService(this)">
-            <span class="service-opt-icon">&#128203;</span>
-            <span class="service-opt-info">
-              <strong>Road Exam Prep / Maneuvers</strong>
-              <span>$140 &mdash; 2 hrs, parallel parking &amp; more</span>
+              <span>$240 &mdash; completely one-on-one</span>
             </span>
           </button>
           <button class="service-opt" data-value="highway" onclick="selectService(this)">
             <span class="service-opt-icon">&#128739;</span>
             <span class="service-opt-info">
               <strong>Highway Lesson</strong>
-              <span>$220 &mdash; 2 hrs</span>
+              <span>$240 &mdash; mandatory 2 hrs</span>
             </span>
           </button>
           <button class="service-opt" data-value="road-test-sponsor" onclick="selectService(this)">
             <span class="service-opt-icon">&#9989;</span>
             <span class="service-opt-info">
               <strong>Road Test Sponsorship</strong>
-              <span>$180 &mdash; car provided for your test</span>
+              <span>From $180 &mdash; Watertown RMV, car provided</span>
             </span>
           </button>
         </div>
@@ -1553,17 +1693,29 @@
 
   document.querySelectorAll('.count-up').forEach(el => countObserver.observe(el));
 
+  // ─── Road Test Passes Wall ───
+  // Drop photos into the passes/ folder and list the filenames here.
+  const PASS_PHOTOS = ['HERO.png'];
+  (function renderPasses(){
+    const grid = document.getElementById('passesGrid');
+    if (!grid) return;
+    const MIN_TILES = 16;
+    const tiles = PASS_PHOTOS.map(f => `<div class="pass"><img src="${f.includes('/')||f==='HERO.png'?f:'passes/'+f}" alt="Student who passed their road test" loading="lazy"></div>`);
+    while (tiles.length < MIN_TILES) tiles.push('<div class="pass pass-empty">&#10003;</div>');
+    grid.innerHTML = tiles.join('');
+  })();
+
   // ─── Booking Multi-Step ───
   const API_BASE = '';
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const DOWS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const SERVICE_LABELS = {
-    '1hr-city': '1-Hour City Driving Lesson ($70)',
-    '2hr-city': '2-Hour City Driving Lesson ($140)',
-    '2hr-private': '2-Hour Private Lesson ($220)',
-    'road-exam-prep': 'Road Exam Prep ($140)',
-    'highway': 'Highway Lesson ($220)',
-    'road-test-sponsor': 'Road Test Sponsorship ($180)'
+    '1hr-city': '1-Hour City Driving Lesson ($80)',
+    '2hr-city': '2-Hour City Driving Lesson ($160)',
+    '1hr-private': '1-Hour Private Lesson ($120)',
+    '2hr-private': '2-Hour Private Lesson ($240)',
+    'highway': 'Highway Lesson ($240)',
+    'road-test-sponsor': 'Road Test Sponsorship (from $180)'
   };
 
   let calYear, calMonth;
@@ -1830,7 +1982,7 @@
   const FAQ = [
     {
       keywords: ['price','pricing','cost','how much','rate','rates','fee','fees','expensive','cheap','afford'],
-      answer: 'Here are our current rates:\n\n<b>1-Hour City Driving Lesson</b> — $70\n<b>2-Hour City Driving Lesson</b> — $140\n<b>2-Hour Private Lesson</b> — $220 (best for nervous or brand new drivers)\n<b>Road Exam Prep / Maneuvers Training</b> — $140 (2 hrs)\n<b>Highway Lesson</b> — $220 (2 hrs)\n<b>Road Test Sponsorship</b> — $180 (car provided for your test)\n\nWant to book? <a href="#book">Click here to schedule</a> or call <a href="tel:+16178521179">(617) 852-1179</a>.'
+      answer: 'Here are our current rates:\n\n<b>City Driving Lessons</b> — $80/hour (not guaranteed one-on-one)\n<b>Private Driving Lessons</b> — $120/hour (completely one-on-one)\n<b>Highway Lessons</b> — $240 (mandatory 2-hour session)\n<b>Road Test Sponsorship</b> — starting at $180 at the Watertown RMV, other locations on request (text (617) 852-4179 for pricing)\n\nWant to book? <a href="#book">Click here to schedule</a> or call <a href="tel:+16178521179">(617) 852-1179</a>.'
     },
     {
       keywords: ['service','services','offer','what do you','lesson type','types of lesson','options'],
