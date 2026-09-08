@@ -533,6 +533,108 @@ app.post('/api/careers', async (req, res) => {
   res.json({ success: true, message: 'Application received.' });
 });
 
+
+// ─── Square Appointments proxy (public buyer API, no auth needed) ───────────
+const SQUARE_MERCHANT = process.env.SQUARE_MERCHANT || 'uxsphao02hdarx';
+const SQUARE_LOCATION = process.env.SQUARE_LOCATION || 'LFX3M7S62PB2R';
+const SQUARE_API = 'https://app.squareup.com/appointments/api/buyer';
+const SQUARE_HEADERS = { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Origin': 'https://book.squareup.com', 'Referer': 'https://book.squareup.com/' };
+const sqCache = new Map();
+const cached = async (key, ttlMs, fn) => {
+  const hit = sqCache.get(key);
+  if (hit && hit.exp > Date.now()) return hit.val;
+  const val = await fn();
+  sqCache.set(key, { val, exp: Date.now() + ttlMs });
+  return val;
+};
+
+async function squareWidget() {
+  return cached('widget', 10 * 60 * 1000, async () => {
+    const r = await fetch(`${SQUARE_API}/widget/${SQUARE_MERCHANT}`, { headers: SQUARE_HEADERS });
+    if (!r.ok) throw new Error(`Square widget ${r.status}`);
+    const d = await r.json();
+    const staffById = Object.fromEntries((d.staff || []).map(s => [s.id, s]));
+    const services = (d.services || []).map(s => {
+      const v = (s.variations || [])[0] || {};
+      const staff = (v.staff_ids || s.staff_ids || []).map(id => staffById[id]).filter(Boolean);
+      return {
+        id: s.id, name: s.name, description: s.description || '',
+        price_cents: v.price_cents ?? s.price_cents ?? null,
+        minutes: Math.round((v.service_time ?? s.time ?? 0) / 60),
+        variation_id: v.id || s.item_variation_token,
+        staff_ids: staff.map(x => x.id), employee_tokens: staff.map(x => x.employee_token),
+        ordinal: s.ordinal ?? 0,
+      };
+    }).sort((a, b) => a.ordinal - b.ordinal);
+    return { business: { name: d.business?.name, cancellation_policy: d.business?.cancellation_policy || '' }, location_id: SQUARE_LOCATION, merchant_id: SQUARE_MERCHANT, services };
+  });
+}
+
+app.get('/api/square/services', async (req, res) => {
+  try { res.set('Cache-Control', 'public, max-age=300'); res.json(await squareWidget()); }
+  catch (e) { console.error('square services', e.message); res.status(502).json({ error: 'Square unavailable' }); }
+});
+
+// Eastern-time helpers (Square's widget queries in the business timezone)
+const ET = 'America/New_York';
+const etParts = d => Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: ET, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23', timeZoneName: 'longOffset' }).formatToParts(d).map(p => [p.type, p.value]));
+const etDayKey = d => { const p = etParts(d); return `${p.year}-${p.month}-${p.day}`; };
+const etOffsetFor = (ymd) => etParts(new Date(`${ymd}T12:00:00Z`)).timeZoneName.replace('GMT', '') || '-05:00';
+const etTime = (ymd, hms) => new Date(`${ymd}T${hms}${etOffsetFor(ymd)}`);
+const addDays = (ymd, n) => etDayKey(new Date(etTime(ymd, '12:00:00').getTime() + n * 86400000));
+
+async function fetchAvailability(variation, startAt, endAt) {
+  const w = await squareWidget();
+  const svc = w.services.find(s => s.variation_id === variation);
+  if (!svc) throw Object.assign(new Error('Unknown service'), { status: 400 });
+  const key = `avail:${variation}:${startAt.toISOString()}:${endAt.toISOString()}`;
+  return cached(key, 90 * 1000, async () => {
+    const body = { search_availability_request: { query: { filter: {
+      start_at_range: { start_at: startAt.toISOString(), end_at: endAt.toISOString() },
+      location_id: SQUARE_LOCATION,
+      segment_filters: [{ service_variation_id: variation, team_member_id_filter: { any: svc.employee_tokens } }],
+    } } } };
+    const r = await fetch(`${SQUARE_API}/availability`, { method: 'POST', headers: SQUARE_HEADERS, body: JSON.stringify(body) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(JSON.stringify(d.errors || d));
+    return (d.availability || []).filter(a => a.available !== false).map(a => ({ start: a.start, end: a.end }));
+  });
+}
+
+// GET /api/square/availability?variation=ID&from=YYYY-MM-DD   → same 31-day window Square's own widget uses
+// GET /api/square/availability?variation=ID&day=YYYY-MM-DD    → single-day check (what Square runs at checkout)
+app.get('/api/square/availability', async (req, res) => {
+  try {
+    const { variation, from, day } = req.query;
+    const today = etDayKey(new Date());
+    let startAt, endAt;
+    if (day) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return res.status(400).json({ error: 'Bad day' });
+      startAt = etTime(day, '00:00:00'); endAt = etTime(addDays(day, 1), '23:59:59');
+    } else {
+      let start = from && /^\d{4}-\d{2}-\d{2}$/.test(from) ? from : today;
+      if (start < today) start = today;
+      startAt = etTime(start, '00:00:00');
+      endAt = new Date(etTime(addDays(start, 31), '23:59:59').getTime() - 3600000);
+    }
+    let slots = await fetchAvailability(variation, startAt, endAt);
+    if (!day) {
+      // Square's checkout re-queries a single day and can drop slots the month view showed.
+      // Intersect with per-day results so every slot we show is guaranteed to survive checkout.
+      const days = [...new Set(slots.map(s => etDayKey(new Date(s.start * 1000))))];
+      const perDay = await Promise.all(days.map(d => fetchAvailability(variation, etTime(d, '00:00:00'), etTime(addDays(d, 1), '23:59:59')).catch(() => null)));
+      const ok = new Set();
+      perDay.forEach((list, i) => { if (list) list.forEach(s => { if (etDayKey(new Date(s.start * 1000)) === days[i]) ok.add(s.start); }); });
+      slots = slots.filter((s, i) => perDay[days.indexOf(etDayKey(new Date(s.start * 1000)))] === null || ok.has(s.start));
+    }
+    res.set('Cache-Control', 'public, max-age=60');
+    res.json({ variation, start: startAt.toISOString(), end: endAt.toISOString(), slots });
+  } catch (e) {
+    if (e.status) return res.status(e.status).json({ error: e.message });
+    console.error('square availability', e.message); res.status(502).json({ error: 'Square unavailable' });
+  }
+});
+
 // ─── Admin page + fallback ───────────────────────────────────────────────────
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));

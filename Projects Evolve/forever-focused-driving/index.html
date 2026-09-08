@@ -103,7 +103,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
 
@@ -237,18 +237,6 @@
   </div>
 </section>
 
-<!-- Ready to Book (Square) -->
-<section class="square-book" id="ready-to-book">
-  <div class="container">
-    <div class="square-book-inner glass fade-up">
-      <div class="section-label">Ready to Book?</div>
-      <div class="section-title">Schedule Your Lessons Online</div>
-      <p class="section-desc">View our current availability and schedule your lessons online at your convenience.</p>
-      <a href="https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services" target="_blank" rel="noopener" class="btn btn-primary square-btn">View Availability &amp; Book &rarr;</a>
-      <div class="square-note">Opens our secure Square booking page</div>
-    </div>
-  </div>
-</section>
 
 <!-- Areas Served -->
 <section class="areas" id="areas">
@@ -449,109 +437,45 @@
     <div class="booking-header fade-up">
       <div class="section-label">Book Online</div>
       <div class="section-title">Schedule Your Lesson</div>
-      <p class="section-desc">Choose a service, pick your date and time, and you're all set.</p>
+      <p class="section-desc">Live availability straight from our calendar. Pick a lesson, pick a time, and finish checkout securely with Square.</p>
     </div>
     <div class="booking-inner fade-up">
 
-      <!-- Step 1: Service Selection -->
-      <div class="booking-step" id="stepService">
-        <div class="step-label">Step 1 &mdash; Choose a Service</div>
-        <div class="service-options" id="serviceOptions">
-          <button class="service-opt" data-value="1hr-city" onclick="selectService(this)">
-            <span class="service-opt-icon">&#128663;</span>
-            <span class="service-opt-info">
-              <strong>1-Hour City Driving Lesson</strong>
-              <span>$80 &mdash; 1 hr</span>
-            </span>
-          </button>
-          <button class="service-opt" data-value="2hr-city" onclick="selectService(this)">
-            <span class="service-opt-icon">&#128663;</span>
-            <span class="service-opt-info">
-              <strong>2-Hour City Driving Lesson</strong>
-              <span>$160 &mdash; 2 hrs</span>
-            </span>
-          </button>
-          <button class="service-opt" data-value="1hr-private" onclick="selectService(this)">
-            <span class="service-opt-icon">&#9889;</span>
-            <span class="service-opt-info">
-              <strong>1-Hour Private Lesson</strong>
-              <span>$120 &mdash; completely one-on-one</span>
-            </span>
-          </button>
-          <button class="service-opt" data-value="2hr-private" onclick="selectService(this)">
-            <span class="service-opt-icon">&#9889;</span>
-            <span class="service-opt-info">
-              <strong>2-Hour Private Lesson</strong>
-              <span>$240 &mdash; completely one-on-one</span>
-            </span>
-          </button>
-          <button class="service-opt" data-value="highway" onclick="selectService(this)">
-            <span class="service-opt-icon">&#128739;</span>
-            <span class="service-opt-info">
-              <strong>Highway Lesson</strong>
-              <span>$240 &mdash; mandatory 2 hrs</span>
-            </span>
-          </button>
-          <button class="service-opt" data-value="road-test-sponsor" onclick="selectService(this)">
-            <span class="service-opt-icon">&#9989;</span>
-            <span class="service-opt-info">
-              <strong>Road Test Sponsorship</strong>
-              <span>From $180 &mdash; Watertown RMV, car provided</span>
-            </span>
-          </button>
-        </div>
+      <div class="booking-step">
+        <div class="step-label">Step 1 &mdash; Choose a Lesson</div>
+        <div class="service-options" id="serviceOptions"><div class="sq-loading">Loading services&hellip;</div></div>
       </div>
 
-      <!-- Step 2: Calendar + Time -->
-      <div class="booking-step hidden" id="stepCalendar">
-        <div class="step-label"><button class="step-back" onclick="goBack('stepService')">&larr;</button> Step 2 &mdash; Pick a Date &amp; Time</div>
-        <div class="booking-layout glass">
-          <div class="cal-panel">
-            <div class="cal-nav">
-              <button onclick="changeMonth(-1)">&#8249;</button>
+      <div class="booking-step" id="stepCalendar" hidden>
+        <div class="step-label">Step 2 &mdash; Pick a Date &amp; Time <span class="tz-note">Times shown in Eastern Time</span></div>
+        <div class="calendar-wrap glass">
+          <div class="calendar">
+            <div class="cal-header">
+              <button class="cal-nav" id="calPrev" onclick="changeMonth(-1)" aria-label="Previous month">&larr;</button>
               <h3 id="calMonthLabel"></h3>
-              <button onclick="changeMonth(1)">&#8250;</button>
+              <button class="cal-nav" id="calNext" onclick="changeMonth(1)" aria-label="Next month">&rarr;</button>
             </div>
+            <div class="cal-dow"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
             <div class="cal-grid" id="calGrid"></div>
+            <div class="cal-foot" id="calFoot"></div>
           </div>
           <div class="time-panel">
-            <h4>Available Times</h4>
             <div class="time-label" id="timeLabel">Select a date</div>
             <div class="time-list" id="timeList"></div>
           </div>
         </div>
       </div>
 
-      <!-- Step 3: Contact Info -->
-      <div class="booking-step hidden" id="stepInfo">
-        <div class="step-label"><button class="step-back" onclick="goBack('stepCalendar')">&larr;</button> Step 3 &mdash; Your Information</div>
+      <div class="booking-step" id="stepConfirm" hidden>
+        <div class="step-label">Step 3 &mdash; Confirm &amp; Checkout</div>
         <div class="booking-summary glass" id="bookingSummary"></div>
-        <div class="booking-form glass" id="bookingForm">
-          <div class="form-grid">
-            <div class="form-group">
-              <label>First Name</label>
-              <input type="text" id="bookName" placeholder="Your name" required>
-            </div>
-            <div class="form-group">
-              <label>Phone</label>
-              <input type="tel" id="bookPhone" placeholder="(617) 000-0000" required>
-            </div>
-            <div class="form-group full">
-              <label>Email</label>
-              <input type="email" id="bookEmail" placeholder="you@email.com" required>
-            </div>
-          </div>
-          <button class="booking-submit" id="bookSubmit" onclick="submitBooking()">Confirm Booking</button>
-        </div>
+        <a class="booking-submit" id="bookCheckout" href="#" target="_blank" rel="noopener">Continue to Secure Checkout &rarr;</a>
+        <div class="booking-note">Checkout opens on Square with your lesson and date already selected. Tap your time once more to confirm, then add your name, phone, and a card to hold the spot.</div>
       </div>
 
-      <!-- Confirmation -->
-      <div class="booking-confirmation" id="bookingConfirmation">
-        <div class="check">&#10003;</div>
-        <h3>Booking Requested!</h3>
-        <p>Alexa will confirm your <span id="confirmService"></span> on <span id="confirmDate"></span> at <span id="confirmTime"></span>. Check your phone for a confirmation text.</p>
+      <div class="booking-alt">
+        Prefer Square's booking window? <a href="https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services" target="_blank" rel="noopener">Open it here &rarr;</a>
       </div>
-
     </div>
   </div>
 </section>
@@ -771,198 +695,160 @@
     wrap.addEventListener('touchstart', () => clearInterval(timer), { passive: true });
   }
 
-  // ─── Booking Multi-Step ───
   const API_BASE = '';
+
+  // ─── Square-powered booking ───
+  const SQ_BASE = 'https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services';
+  const TZ = 'America/New_York';
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const DOWS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const SERVICE_LABELS = {
-    '1hr-city': '1-Hour City Driving Lesson ($80)',
-    '2hr-city': '2-Hour City Driving Lesson ($160)',
-    '1hr-private': '1-Hour Private Lesson ($120)',
-    '2hr-private': '2-Hour Private Lesson ($240)',
-    'highway': 'Highway Lesson ($240)',
-    'road-test-sponsor': 'Road Test Sponsorship (from $180)'
+  let sqServices = [], selectedService = null, selectedSlot = null;
+  let calYear, calMonth, slotsByDay = {}, availReq = 0;
+
+  const money = c => c == null ? '' : '$' + (c / 100).toFixed(c % 100 ? 2 : 0);
+  const dur = m => m >= 60 ? (m / 60) + ' hr' + (m > 60 ? 's' : '') : m + ' min';
+  const fmtParts = (sec, opts) => new Intl.DateTimeFormat('en-US', { timeZone: TZ, ...opts }).formatToParts(new Date(sec * 1000));
+  const dayKey = sec => { const p = Object.fromEntries(fmtParts(sec, { year: 'numeric', month: '2-digit', day: '2-digit' }).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
+  const fmtTime = sec => new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', minute: '2-digit' }).format(new Date(sec * 1000));
+  const fmtLong = sec => new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(sec * 1000));
+  const tzOffsetISO = sec => { // ISO with Eastern offset for Square's start_time param
+    const p = Object.fromEntries(fmtParts(sec, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23', timeZoneName: 'longOffset' }).map(x => [x.type, x.value]));
+    const off = (p.timeZoneName || 'GMT-05:00').replace('GMT', '') || '+00:00';
+    return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:${p.second}${off}`;
   };
 
-  let calYear, calMonth;
-  let selectedService = null;
-  let selectedDate = null;
-  let selectedSlot = null;
-
-  function showStep(id) {
-    document.querySelectorAll('.booking-step').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
+  async function loadServices() {
+    const box = document.getElementById('serviceOptions');
+    try {
+      const r = await fetch(`${API_BASE}/api/square/services`);
+      const d = await r.json();
+      sqServices = d.services;
+      const icon = n => /private/i.test(n) ? '&#9889;' : /highway/i.test(n) ? '&#128739;' : /exam|maneuver|manuever/i.test(n) ? '&#128203;' : '&#128663;';
+      box.innerHTML = sqServices.map(s => `
+        <button class="service-opt" data-id="${s.variation_id}" onclick="selectService('${s.variation_id}')">
+          <span class="service-opt-icon">${icon(s.name)}</span>
+          <span class="service-opt-info">
+            <strong>${s.name}</strong>
+            <span>${money(s.price_cents)} &mdash; ${dur(s.minutes)}</span>
+          </span>
+        </button>`).join('');
+    } catch (e) {
+      box.innerHTML = `<div class="sq-loading">Couldn't load services. <a href="${SQ_BASE}" target="_blank" rel="noopener">Book on Square instead &rarr;</a></div>`;
+    }
   }
 
-  function goBack(stepId) {
-    showStep(stepId);
-  }
-
-  // Step 1: Service selection
-  function selectService(btn) {
-    document.querySelectorAll('.service-opt').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedService = btn.dataset.value;
-    selectedDate = null;
+  function selectService(id) {
+    selectedService = sqServices.find(s => s.variation_id === id);
     selectedSlot = null;
-    setTimeout(() => {
-      showStep('stepCalendar');
-      initCalendar();
-    }, 200);
-  }
-
-  // Step 2: Calendar
-  function initCalendar() {
+    document.querySelectorAll('.service-opt').forEach(b => b.classList.toggle('selected', b.dataset.id === id));
+    document.getElementById('stepConfirm').hidden = true;
+    const step = document.getElementById('stepCalendar');
+    step.hidden = false;
     const now = new Date();
-    calYear = now.getFullYear();
-    calMonth = now.getMonth();
-    renderCalendar();
+    calYear = now.getFullYear(); calMonth = now.getMonth();
     document.getElementById('timeLabel').textContent = 'Select a date';
     document.getElementById('timeList').innerHTML = '';
+    loadMonth();
+    step.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function changeMonth(dir) {
-    calMonth += dir;
-    if (calMonth > 11) { calMonth = 0; calYear++; }
-    if (calMonth < 0) { calMonth = 11; calYear--; }
-    renderCalendar();
+  function changeMonth(d) {
+    calMonth += d; if (calMonth < 0) { calMonth = 11; calYear--; } if (calMonth > 11) { calMonth = 0; calYear++; }
+    loadMonth();
   }
 
-  function renderCalendar() {
-    document.getElementById('calMonthLabel').textContent = `${MONTHS[calMonth]} ${calYear}`;
-    const grid = document.getElementById('calGrid');
-    grid.innerHTML = '';
-
-    DOWS.forEach(d => {
-      const el = document.createElement('div');
-      el.className = 'cal-dow';
-      el.textContent = d;
-      grid.appendChild(el);
-    });
-
-    const firstDay = new Date(calYear, calMonth, 1).getDay();
-    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-    const today = new Date();
-    today.setHours(0,0,0,0);
-
-    for (let i = 0; i < firstDay; i++) {
-      const el = document.createElement('div');
-      el.className = 'cal-day empty';
-      grid.appendChild(el);
-    }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const btn = document.createElement('button');
-      btn.className = 'cal-day';
-      btn.textContent = d;
-      const dateObj = new Date(calYear, calMonth, d);
-      dateObj.setHours(0,0,0,0);
-      const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-
-      if (dateObj < today) {
-        btn.classList.add('disabled');
-      } else {
-        if (dateObj.getTime() === today.getTime()) btn.classList.add('today');
-        if (selectedDate === dateStr) btn.classList.add('selected');
-        btn.onclick = () => selectCalDate(dateStr, btn);
-      }
-      grid.appendChild(btn);
-    }
-  }
-
-  function selectCalDate(dateStr, btn) {
-    selectedDate = dateStr;
-    selectedSlot = null;
-    document.querySelectorAll('.cal-day').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-
-    const d = new Date(dateStr + 'T12:00:00');
-    document.getElementById('timeLabel').textContent =
-      d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-
-    loadSlots(dateStr);
-  }
-
-  async function loadSlots(date) {
-    const list = document.getElementById('timeList');
-    list.innerHTML = '<div class="slots-loading">Loading...</div>';
-
+  async function loadMonth() {
+    const label = document.getElementById('calMonthLabel');
+    label.textContent = `${MONTHS[calMonth]} ${calYear}`;
+    const now = new Date();
+    document.getElementById('calPrev').disabled = calYear < now.getFullYear() || (calYear === now.getFullYear() && calMonth <= now.getMonth());
+    document.getElementById('calNext').disabled = (calYear - now.getFullYear()) * 12 + (calMonth - now.getMonth()) >= 2;
+    const monthStart = new Date(calYear, calMonth, 1, 12);
+    // Square's widget starts its window a week before the month's first week, or today, whichever is later
+    const weekStart = new Date(monthStart); weekStart.setDate(monthStart.getDate() - monthStart.getDay() - 7);
+    const from = weekStart > now ? weekStart : now;
+    const fromKey = dayKey(from.getTime() / 1000);
+    renderCalendar({}, true);
+    const my = ++availReq;
     try {
-      const res = await fetch(`${API_BASE}/api/availability?date=${date}&service=${selectedService}`);
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-      renderSlots(data.slots || []);
+      const r = await fetch(`${API_BASE}/api/square/availability?variation=${encodeURIComponent(selectedService.variation_id)}&from=${fromKey}`);
+      const d = await r.json();
+      if (my !== availReq) return;
+      slotsByDay = {};
+      const prefix = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-`;
+      (d.slots || []).forEach(sl => { const k = dayKey(sl.start); if (k.startsWith(prefix)) (slotsByDay[k] = slotsByDay[k] || []).push(sl); });
+      renderCalendar(slotsByDay, false);
     } catch (e) {
-      list.innerHTML = '<div class="no-slots">Could not load availability. Call or text (617) 990-1299 to book.</div>';
+      if (my !== availReq) return;
+      document.getElementById('calFoot').innerHTML = `Couldn't load times. <a href="${SQ_BASE}" target="_blank" rel="noopener">Book on Square &rarr;</a>`;
     }
   }
 
-  function renderSlots(slots) {
-    const list = document.getElementById('timeList');
-    list.innerHTML = '';
-    if (slots.length === 0) {
-      list.innerHTML = '<div class="no-slots">No availability</div>';
+  function renderCalendar(days, loading) {
+    const grid = document.getElementById('calGrid');
+    const first = new Date(calYear, calMonth, 1).getDay();
+    const count = new Date(calYear, calMonth + 1, 0).getDate();
+    const todayKey = dayKey(Date.now() / 1000);
+    let html = '';
+    for (let i = 0; i < first; i++) html += '<span class="cal-day empty"></span>';
+    for (let d = 1; d <= count; d++) {
+      const k = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const n = (days[k] || []).length;
+      const past = k < todayKey;
+      const cls = ['cal-day', past ? 'past' : '', n ? 'avail' : '', k === todayKey ? 'today' : ''].join(' ');
+      html += n ? `<button class="${cls}" onclick="selectDay('${k}')">${d}<i>${n}</i></button>` : `<span class="${cls}">${d}</span>`;
+    }
+    grid.innerHTML = html;
+    const total = Object.values(days).reduce((a, b) => a + b.length, 0);
+    document.getElementById('calFoot').textContent = loading ? 'Checking live availability…' : total ? `${total} open ${total === 1 ? 'time' : 'times'} this month` : 'No openings this month. Try the next one.';
+  }
+
+  function selectDay(k) {
+    document.querySelectorAll('.cal-day').forEach(b => b.classList.toggle('selected', b.textContent.replace(/\D/g, '') === String(parseInt(k.slice(8))) && b.classList.contains('avail')));
+    const slots = (slotsByDay[k] || []).slice().sort((a, b) => a.start - b.start);
+    document.getElementById('timeLabel').textContent = fmtLong(slots[0].start);
+    document.getElementById('timeList').innerHTML = slots.map(sl => `<button class="time-slot" onclick="selectSlot(${sl.start}, ${sl.end})">${fmtTime(sl.start)}</button>`).join('');
+  }
+
+  async function selectSlot(start, end) {
+    selectedSlot = { start, end };
+    document.querySelectorAll('.time-slot').forEach(b => b.classList.toggle('selected', b.textContent === fmtTime(start)));
+    const s = selectedService;
+    const step = document.getElementById('stepConfirm');
+    const btn = document.getElementById('bookCheckout');
+    document.getElementById('bookingSummary').innerHTML = `
+      <div class="summary-row"><span>Lesson</span><strong>${s.name}</strong></div>
+      <div class="summary-row"><span>When</span><strong>${fmtLong(start)} at ${fmtTime(start)}</strong></div>
+      <div class="summary-row"><span>Length</span><strong>${dur(s.minutes)}</strong></div>
+      <div class="summary-row"><span>Price</span><strong>${money(s.price_cents)}</strong></div>`;
+    btn.textContent = 'Confirming this time is still open…'; btn.classList.add('is-loading'); btn.removeAttribute('href');
+    step.hidden = false;
+    step.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Re-check the exact day the way Square does at checkout, so the slot we hand off is guaranteed to exist there
+    let ok = true;
+    try {
+      const r = await fetch(`${API_BASE}/api/square/availability?variation=${encodeURIComponent(s.variation_id)}&day=${dayKey(start)}`);
+      const d = await r.json();
+      ok = (d.slots || []).some(x => x.start === start);
+    } catch (e) { ok = true; }
+    if (selectedSlot?.start !== start) return;
+    btn.classList.remove('is-loading');
+    if (!ok) {
+      btn.textContent = 'That time was just taken. Pick another.';
+      loadMonth();
       return;
     }
-    slots.forEach(time => {
-      const btn = document.createElement('button');
-      btn.className = 'slot-btn';
-      btn.textContent = time;
-      btn.onclick = () => selectSlot(btn, time);
-      list.appendChild(btn);
-    });
+    const url = new URL(SQ_BASE);
+    url.searchParams.set('service_id', s.id);
+    url.searchParams.set('variation_id', s.variation_id);
+    if (s.staff_ids[0]) url.searchParams.set('staff_id', s.staff_ids[0]);
+    url.searchParams.set('date', dayKey(start));
+    url.searchParams.set('start_time', tzOffsetISO(start));
+    url.searchParams.set('quick_checkout', 'true');
+    btn.href = url.toString();
+    btn.innerHTML = 'Continue to Secure Checkout &rarr;';
   }
 
-  function selectSlot(btn, time) {
-    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedSlot = time;
-
-    // Build summary and go to step 3
-    setTimeout(() => {
-      const d = new Date(selectedDate + 'T12:00:00');
-      const dateStr = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-      document.getElementById('bookingSummary').innerHTML =
-        `<span class="summary-dot"></span>${SERVICE_LABELS[selectedService]} &mdash; ${dateStr} at ${selectedSlot}`;
-      showStep('stepInfo');
-    }, 200);
-  }
-
-  // Step 3: Submit
-  async function submitBooking() {
-    const name = document.getElementById('bookName').value.trim();
-    const phone = document.getElementById('bookPhone').value.trim();
-    const email = document.getElementById('bookEmail').value.trim();
-
-    if (!name || !phone || !email) { alert('Please fill in all fields.'); return; }
-
-    const btn = document.getElementById('bookSubmit');
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-
-    try {
-      const res = await fetch(`${API_BASE}/api/book`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: selectedDate, time: selectedSlot, name, phone, email, service: selectedService })
-      });
-      if (!res.ok) throw new Error('Booking failed');
-    } catch (e) {}
-
-    const dateObj = new Date(selectedDate + 'T12:00:00');
-    const dateStr = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    document.getElementById('confirmService').textContent = SERVICE_LABELS[selectedService];
-    document.getElementById('confirmDate').textContent = dateStr;
-    document.getElementById('confirmTime').textContent = selectedSlot;
-
-    document.getElementById('stepInfo').classList.add('hidden');
-    const conf = document.getElementById('bookingConfirmation');
-    conf.style.display = 'block';
-    conf.classList.add('show');
-
-    btn.disabled = false;
-    btn.textContent = 'Confirm Booking';
-  }
+  loadServices();
 
   // ─── Career Form Submission ───
   async function submitCareerForm() {
