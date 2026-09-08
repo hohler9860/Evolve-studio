@@ -335,6 +335,24 @@
     .lesson-detail p:last-child { margin-bottom: 0; }
     .lesson-note { font-weight: 600; color: var(--g900) !important; }
 
+    /* ─── 5-Hour Package ─── */
+    .package-card { margin-top: 40px; border-radius: 20px; background: var(--g950); color: var(--white); padding: 36px 36px 32px; }
+    .package-head { display: flex; justify-content: space-between; gap: 28px; align-items: flex-start; padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .package-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--g400); margin-bottom: 12px; }
+    .package-card h3 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .package-head p { color: var(--g400); font-size: 0.95rem; line-height: 1.7; max-width: 560px; }
+    .package-price { text-align: right; flex: 0 0 auto; }
+    .package-was { display: block; color: var(--g500); text-decoration: line-through; font-size: 1rem; }
+    .package-now { display: block; font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+    .package-save { display: inline-block; margin-top: 8px; padding: 4px 10px; border-radius: 6px; background: var(--white); color: var(--black); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; }
+    .package-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding-top: 28px; }
+    .package-grid h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--g400); margin-bottom: 12px; }
+    .package-grid p { color: var(--g300); font-size: 0.9rem; line-height: 1.7; margin-bottom: 10px; }
+    .package-grid ul { margin: 0 0 0 18px; color: var(--g300); font-size: 0.9rem; line-height: 1.75; }
+    .package-grid li { margin-bottom: 4px; }
+    .package-btn { display: inline-block; margin-top: 8px; background: var(--white); color: var(--black); }
+    .package-btn:hover { background: var(--g200); }
+
     /* ─── Road Test ─── */
     .road-test { padding: 100px 0; background: var(--g50); border-top: 1px solid var(--g200); border-bottom: 1px solid var(--g200); }
     .road-test-header { text-align: center; margin-bottom: 48px; }
@@ -554,6 +572,20 @@
     .square-embed iframe { display: block; width: 100%; height: 860px; border: 0; }
     .square-note { text-align: center; margin-top: 14px; font-size: 0.8rem; color: var(--g400); }
 
+    /* ─── Forms (shared) ─── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 0.76rem; font-weight: 600; color: var(--g500); text-transform: uppercase; letter-spacing: 1px; }
+    .form-group input, .form-group select {
+      padding: 13px 16px; border-radius: 10px; border: 1.5px solid var(--g200);
+      font-size: 0.92rem; font-family: inherit; background: var(--white); color: var(--g900);
+      transition: border-color 0.25s; width: 100%;
+    }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--black); }
+    .form-group input::placeholder { color: var(--g400); }
+    .careers-form .booking-submit { margin-top: 20px; }
+
     /* ─── Careers ─── */
     .careers { padding: 100px 0; }
     .careers-header { text-align: center; margin-bottom: 56px; }
@@ -655,6 +687,10 @@
     @media (max-width: 900px) {
       .why-grid { grid-template-columns: 1fr; gap: 48px; }
       .road-test-grid { grid-template-columns: 1fr; }
+      .package-head { flex-direction: column; }
+      .package-price { text-align: left; }
+      .package-grid { grid-template-columns: 1fr; }
+      .package-card { padding: 28px 22px; }
       .road-test-side { position: static; }
       .lesson-details { grid-template-columns: 1fr; }
       .why-stats { max-width: 400px; }
@@ -676,6 +712,7 @@
       .cta-faces img { width: 40px; height: 40px; margin-left: -10px; }
       .carousel-slide { height: 240px; }
       .service-options { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
       .calendar-wrap { grid-template-columns: 1fr; }
       .calendar { border-right: 0; border-bottom: 1px solid var(--g200); }
       .time-list { grid-template-columns: repeat(3, 1fr); max-height: none; }
