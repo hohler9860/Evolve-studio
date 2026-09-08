@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Services &amp; Pricing | Forever Focused Driving Academy</title>
-  <meta name="description" content="Driving lesson pricing in Cambridge, MA. City lessons $80/hour, private one-on-one lessons $120/hour, highway lessons $240, road test sponsorship from $180 at the Watertown RMV. Text (617) 852-4179.">
+  <title>Book a Driving Lesson | Forever Focused Driving Academy</title>
+  <meta name="description" content="See live availability and book your driving lesson in Cambridge, MA. City lessons $80/hour, private $120/hour, highway $240. Secure checkout by Square.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://foreverfocuseddriving.com/services">
-  <meta property="og:title" content="Services &amp; Pricing | Forever Focused Driving Academy">
-  <meta property="og:description" content="City lessons $80/hr, private lessons $120/hr, highway $240, road test sponsorship from $180.">
+  <link rel="canonical" href="https://foreverfocuseddriving.com/book">
+  <meta property="og:title" content="Book a Driving Lesson | Forever Focused Driving Academy">
+  <meta property="og:description" content="Live availability. Pick a lesson, pick a time, checkout securely with Square.">
   <meta property="og:image" content="https://foreverfocuseddriving.com/Award.png">
-  <meta property="og:url" content="https://foreverfocuseddriving.com/services">
+  <meta property="og:url" content="https://foreverfocuseddriving.com/book">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=10">
   <style>
-    .page-hero { padding: 150px 0 40px; text-align: center; }
-    .page-hero .section-desc { margin: 0 auto; }
-    .services.subpage { padding: 40px 0 100px; }
+    .booking.subpage { padding: 130px 0 100px; border-top: 0; min-height: 100vh; }
+    .booking.subpage .booking-header .section-title { font-size: clamp(2.2rem, 5vw, 3.2rem); }
   </style>
 </head>
 <body>
@@ -40,177 +39,54 @@
   </div>
 </nav>
 
-<section class="page-hero">
+<section class="booking subpage" id="book">
   <div class="container">
-    <div class="section-label fade-up">Services &amp; Pricing</div>
-    <h1 class="section-title fade-up">Driving Lessons<br>Built Around You</h1>
-    <p class="section-desc fade-up">Every option we offer, what it costs, and what to expect. Pickup and drop-off anywhere within Cambridge.</p>
+    <div class="booking-header fade-up">
+      <div class="section-label">Book Online</div>
+      <div class="section-title">Schedule Your Lesson</div>
+      <p class="section-desc">Live availability straight from our calendar. Pick a lesson, pick a time, and finish checkout securely with Square.</p>
+    </div>
+    <div class="booking-inner fade-up">
+
+      <div class="booking-step">
+        <div class="step-label">Step 1 &mdash; Choose a Lesson</div>
+        <div class="service-options" id="serviceOptions"><div class="sq-loading">Loading services&hellip;</div></div>
+      </div>
+
+      <div class="booking-step" id="stepCalendar" hidden>
+        <div class="step-label">Step 2 &mdash; Pick a Date &amp; Time <span class="tz-note">Times shown in Eastern Time</span></div>
+        <div class="calendar-wrap glass">
+          <div class="calendar">
+            <div class="cal-header">
+              <button class="cal-nav" id="calPrev" onclick="changeMonth(-1)" aria-label="Previous month">&larr;</button>
+              <h3 id="calMonthLabel"></h3>
+              <button class="cal-nav" id="calNext" onclick="changeMonth(1)" aria-label="Next month">&rarr;</button>
+            </div>
+            <div class="cal-dow"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div class="cal-foot" id="calFoot"></div>
+          </div>
+          <div class="time-panel">
+            <div class="time-label" id="timeLabel">Select a date</div>
+            <div class="time-list" id="timeList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-step" id="stepConfirm" hidden>
+        <div class="step-label">Step 3 &mdash; Confirm &amp; Checkout</div>
+        <div class="booking-summary glass" id="bookingSummary"></div>
+        <a class="booking-submit" id="bookCheckout" href="#" target="_blank" rel="noopener">Continue to Secure Checkout &rarr;</a>
+        <div class="booking-note">Checkout opens on Square with your lesson and date already selected. Tap your time once more to confirm, then add your name, phone, and a card to hold the spot.</div>
+      </div>
+
+      <div class="booking-alt">
+        Prefer Square's booking window? <a href="https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services" target="_blank" rel="noopener">Open it here &rarr;</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="services subpage" id="services">
-  <div class="container">
-    <div class="services-grid stagger-children">
-      <div class="service-card glass fade-up">
-        <div class="service-icon">&#128663;</div>
-        <h3>City Driving Lessons</h3>
-        <p>Behind-the-wheel instruction based on your individual needs and skill level. Also available to licensed drivers looking for a refresher lesson.</p>
-        <div class="service-tag">$80 / hour</div>
-      </div>
-      <div class="service-card glass fade-up">
-        <div class="service-icon">&#9889;</div>
-        <h3>Private Driving Lessons</h3>
-        <p>Completely one-on-one. Only you and your instructor in the vehicle. Popular with beginners, nervous drivers, and anyone who prefers a private learning environment.</p>
-        <div class="service-tag">$120 / hour</div>
-      </div>
-      <div class="service-card glass fade-up">
-        <div class="service-icon">&#128739;</div>
-        <h3>Highway Lessons</h3>
-        <p>Learn to merge, change lanes, and drive confidently at highway speeds. Offered as a mandatory two-hour session.</p>
-        <div class="service-tag">$240 / 2 hours</div>
-      </div>
-      <div class="service-card glass fade-up">
-        <div class="service-icon">&#9989;</div>
-        <h3>Road Test Sponsorship</h3>
-        <p>Use of our driving school vehicle plus a Forever Focused representative as your sponsor at the Watertown RMV. Other RMV locations available upon request.</p>
-        <div class="service-tag">Starting at $180</div>
-        <a href="#road-test" class="service-link">Full details &rarr;</a>
-      </div>
-    </div>
-
-
-    <div class="package-card fade-up" id="package">
-      <div class="package-head">
-        <div>
-          <div class="package-eyebrow">Seasonal Offer &middot; October 1 to April 1</div>
-          <h3>5-Hour City Driving Package</h3>
-          <p>Five hours of Regular City Driving instruction for $350. That is a $50 savings compared to booking five individual hours at our regular $80/hour rate. Schedule it in 1- or 2-hour sessions.</p>
-        </div>
-        <div class="package-price">
-          <span class="package-was">$400</span>
-          <span class="package-now">$350</span>
-          <span class="package-save">Save $50</span>
-        </div>
-      </div>
-      <div class="package-grid">
-        <div>
-          <h4>How to Purchase</h4>
-          <p>Simply use our online booking link to schedule your first City Driving lesson as you normally would. Full payment of $350 must be made in cash on the day of your first scheduled lesson.</p>
-          <p>Once purchased, you may continue booking your remaining package hours through our regular online booking system at your convenience.</p>
-          <a href="/book" class="btn btn-primary package-btn">Book Your First Lesson &rarr;</a>
-        </div>
-        <div>
-          <h4>Package Terms</h4>
-          <ul>
-            <li>Valid Monday through Friday only. Weekends are excluded.</li>
-            <li>Available for purchase October 1 through April 1 only.</li>
-            <li>All 5 hours must be used within 6 months of the purchase date.</li>
-            <li>Package is non-refundable and non-transferable.</li>
-            <li>Any unused hours expire after the 6-month period.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="lesson-details stagger-children">
-      <div class="lesson-detail fade-up">
-        <div class="lesson-detail-head">
-          <h3>City Driving Lessons</h3>
-          <span class="lesson-price">$80/hour</span>
-        </div>
-        <p>Our standard City Driving lessons provide behind-the-wheel instruction based on each student's individual needs and skill level. Yes, this option is also available to licensed individuals looking for a refresher lesson!</p>
-        <p class="lesson-fine">Please note that City Driving lessons are not guaranteed to be one-on-one. Depending on the schedule, you may be asked to assist with returning the previous student to their drop-off location, or an underage student may be present to observe the lesson as part of their RMV-required observation hours.</p>
-      </div>
-      <div class="lesson-detail fade-up">
-        <div class="lesson-detail-head">
-          <h3>Private Driving Lessons</h3>
-          <span class="lesson-price">$120/hour</span>
-        </div>
-        <p>Private lessons are completely one-on-one. No other students will be in the vehicle during your scheduled lesson. Only you and your instructor.</p>
-        <p>This option is especially popular with beginners, nervous drivers, or anyone who prefers a more individualized and private learning environment, including licensed individuals looking for a refresher course.</p>
-      </div>
-      <div class="lesson-detail fade-up">
-        <div class="lesson-detail-head">
-          <h3>Highway Lessons</h3>
-          <span class="lesson-price">$240</span>
-        </div>
-        <p>Highway instruction is offered as a mandatory two-hour session for $240.</p>
-        <p>Learn to merge, change lanes, keep safe following distance, and stay calm at highway speeds.</p>
-      </div>
-    </div>
-
-    <div class="lesson-faq fade-up">
-      <div class="lesson-faq-side">
-        <div class="section-label">Good to know</div>
-        <h3>How Many Lessons<br>Will I Need?</h3>
-        <div class="lesson-faq-stat"><span>15 to 20</span>hours is the average for a complete beginner</div>
-        <p class="lesson-note">We offer pickup and drop-off anywhere within Cambridge.</p>
-      </div>
-      <div class="lesson-faq-body">
-        <p>We cannot accurately determine how many lessons a student will need without first assessing their driving skills in person.</p>
-        <p>On average, a complete beginner may require approximately 15 to 20 hours of professional instruction to progress from the beginner stage to being road-test ready.</p>
-        <p>However, every student learns at a different pace. The amount of instruction needed may vary depending on prior driving experience, consistency between lessons, how frequently lessons are scheduled, and how well the student retains and applies previously learned skills.</p>
-        <p>Some students may require fewer hours, while others may benefit from additional instruction.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- Road Test Sponsorship + Passes -->
-<section class="road-test" id="road-test">
-  <div class="container">
-    <div class="road-test-header fade-up">
-      <div class="section-label">Road Test Sponsorship</div>
-      <div class="section-title">Road Test Sponsorship<br>Starting at $180</div>
-    </div>
-    <div class="road-test-grid fade-up">
-      <div class="road-test-copy">
-        <p>Road test sponsorship is available at the Watertown RMV for $180 and includes:</p>
-        <ul>
-          <li>Use of our driving school vehicle for your road test</li>
-          <li>A Forever Focused Driving Academy representative serving as your road test sponsor</li>
-        </ul>
-        <p>Road test sponsorship at other RMV locations may also be available upon request. Because Watertown is the closest road test location to our primary service area, it is offered at our lowest sponsorship rate.</p>
-        <p>Sponsorship fees for other RMV locations will increase based on location and travel distance. This additional cost accounts for mileage, fuel, travel time, and the extended amount of time our vehicle and instructor are away from our Cambridge service area, during which we would otherwise be conducting scheduled driving lessons.</p>
-        <p class="road-test-text">Please <strong>TEXT <a href="sms:+16178524179">(617) 852-4179</a></strong> with your requested RMV location for availability and pricing.</p>
-        <p>If you would like additional practice before your road test, you may also book a one- or two-hour driving lesson prior to your test, provided availability permits.</p>
-      </div>
-      <div class="road-test-side glass">
-        <div class="road-test-side-label">Sponsorship includes</div>
-        <div class="road-test-side-price">$180</div>
-        <div class="road-test-side-sub">Watertown RMV</div>
-        <ul class="road-test-side-list">
-          <li>&#10003; Driving school vehicle for your test</li>
-          <li>&#10003; Representative as your sponsor</li>
-          <li>&#10003; Other RMV locations on request</li>
-        </ul>
-        <a href="sms:+16178524179" class="btn btn-primary road-test-side-btn">Text for Availability</a>
-      </div>
-    </div>
-
-    <div class="passes-header fade-up">
-      <div class="section-label">Proven Results</div>
-      <h3 class="passes-title">Students who passed their road test with us</h3>
-      <p class="section-desc">Every one of these is a new licensed driver. This wall keeps growing.</p>
-    </div>
-    <div class="passes-grid" id="passesGrid"></div>
-  </div>
-</section>
-
-
-<!-- Ready to Book (Square) -->
-<section class="square-book" id="ready-to-book">
-  <div class="container">
-    <div class="square-book-inner glass fade-up">
-      <div class="section-label">Ready to Book?</div>
-      <div class="section-title">Schedule Your Lessons Online</div>
-      <p class="section-desc">View our current availability and schedule your lessons online at your convenience.</p>
-      <a href="/book" class="btn btn-primary square-btn">See Live Availability &amp; Book &rarr;</a>
-      <div class="square-note">Live times from our calendar. Checkout is handled securely by Square.</div>
-    </div>
-  </div>
-</section>
 
 <footer>
   <div class="container">
@@ -426,6 +302,7 @@
   }
 </script>
 
+
 <script>
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); });
@@ -433,54 +310,162 @@
     entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.fade-up, .scale-in, .slide-left, .slide-right').forEach(el => animObserver.observe(el));
+  document.querySelectorAll('.booking .fade-up').forEach(el => el.classList.add('visible'));
 
+  const API_BASE = '';
+  // ─── Square-powered booking ───
+  const SQ_BASE = 'https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services';
+  const TZ = 'America/New_York';
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let sqServices = [], selectedService = null, selectedSlot = null;
+  let calYear, calMonth, slotsByDay = {}, availReq = 0;
 
-  // ─── Pass photos ───
-  const PASS_COUNT = 49;
-  const passFull = i => `passes/pass-${String(i).padStart(2,'0')}.jpg`;
-  const passThumb = i => `passes/thumbs/pass-${String(i).padStart(2,'0')}.jpg`;
-  const passIds = Array.from({length: PASS_COUNT}, (_, i) => i + 1);
-  const shuffled = (() => { const a = passIds.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; })();
-  const ALT = 'Forever Focused student who passed their road test';
+  const money = c => c == null ? '' : '$' + (c / 100).toFixed(c % 100 ? 2 : 0);
+  const dur = m => m >= 60 ? (m / 60) + ' hr' + (m > 60 ? 's' : '') : m + ' min';
+  const fmtParts = (sec, opts) => new Intl.DateTimeFormat('en-US', { timeZone: TZ, ...opts }).formatToParts(new Date(sec * 1000));
+  const dayKey = sec => { const p = Object.fromEntries(fmtParts(sec, { year: 'numeric', month: '2-digit', day: '2-digit' }).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
+  const fmtTime = sec => new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', minute: '2-digit' }).format(new Date(sec * 1000));
+  const fmtLong = sec => new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(sec * 1000));
+  const tzOffsetISO = sec => { // ISO with Eastern offset for Square's start_time param
+    const p = Object.fromEntries(fmtParts(sec, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23', timeZoneName: 'longOffset' }).map(x => [x.type, x.value]));
+    const off = (p.timeZoneName || 'GMT-05:00').replace('GMT', '') || '+00:00';
+    return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:${p.second}${off}`;
+  };
 
-  // Grid (services page)
-  const grid = document.getElementById('passesGrid');
-  if (grid) grid.innerHTML = passIds.map(i => `<div class="pass"><img src="${passThumb(i)}" alt="${ALT}" loading="lazy"></div>`).join('');
-
-  // Marquee strips
-  document.querySelectorAll('.pass-marquee').forEach((m, idx) => {
-    const ids = idx % 2 ? shuffled.slice().reverse() : shuffled;
-    const html = ids.map(i => `<img src="${passThumb(i)}" alt="${ALT}" loading="lazy">`).join('');
-    m.innerHTML = `<div class="pass-marquee-track${idx % 2 ? ' reverse' : ''}">${html}${html}</div>`;
-  });
-
-  // Sprinkles: any element with data-pass-pick="n" gets n random photos
-  document.querySelectorAll('[data-pass-pick]').forEach((el, k) => {
-    const n = parseInt(el.dataset.passPick);
-    const ids = shuffled.slice(k * n, k * n + n);
-    el.innerHTML = ids.map(i => `<img src="${passThumb(i)}" alt="${ALT}" loading="lazy">`).join('');
-  });
-
-  // Main carousel
-  const track = document.getElementById('carouselTrack');
-  if (track) {
-    track.innerHTML = passIds.map(i => `<div class="carousel-slide"><img src="${passFull(i)}" alt="${ALT}" loading="lazy"></div>`).join('');
-    const counter = document.getElementById('carouselCounter');
-    const slides = () => Array.from(track.children);
-    const current = () => { const x = track.scrollLeft + 1; let idx = 0; slides().forEach((s, i) => { if (s.offsetLeft <= x) idx = i; }); return idx; };
-    const update = () => { if (counter) counter.textContent = `${current() + 1} / ${PASS_COUNT}`; };
-    track.addEventListener('scroll', update, { passive: true }); update();
-    window.carouselScroll = dir => {
-      const idx = current(); const next = Math.min(Math.max(idx + dir, 0), PASS_COUNT - 1);
-      if (dir > 0 && idx === PASS_COUNT - 1) { track.scrollTo({ left: 0, behavior: 'smooth' }); return; }
-      track.scrollTo({ left: slides()[next].offsetLeft - 4, behavior: 'smooth' });
-    };
-    let timer = setInterval(() => carouselScroll(1), 4000);
-    const wrap = track.closest('.pass-carousel');
-    wrap.addEventListener('mouseenter', () => clearInterval(timer));
-    wrap.addEventListener('mouseleave', () => { timer = setInterval(() => carouselScroll(1), 4000); });
-    wrap.addEventListener('touchstart', () => clearInterval(timer), { passive: true });
+  async function loadServices() {
+    const box = document.getElementById('serviceOptions');
+    try {
+      const r = await fetch(`${API_BASE}/api/square/services`);
+      const d = await r.json();
+      sqServices = d.services;
+      const icon = n => /private/i.test(n) ? '&#9889;' : /highway/i.test(n) ? '&#128739;' : /exam|maneuver|manuever/i.test(n) ? '&#128203;' : '&#128663;';
+      box.innerHTML = sqServices.map(s => `
+        <button class="service-opt" data-id="${s.variation_id}" onclick="selectService('${s.variation_id}')">
+          <span class="service-opt-icon">${icon(s.name)}</span>
+          <span class="service-opt-info">
+            <strong>${s.name}</strong>
+            <span>${money(s.price_cents)} &mdash; ${dur(s.minutes)}</span>
+          </span>
+        </button>`).join('');
+    } catch (e) {
+      box.innerHTML = `<div class="sq-loading">Couldn't load services. <a href="${SQ_BASE}" target="_blank" rel="noopener">Book on Square instead &rarr;</a></div>`;
+    }
   }
+
+  function selectService(id) {
+    selectedService = sqServices.find(s => s.variation_id === id);
+    selectedSlot = null;
+    document.querySelectorAll('.service-opt').forEach(b => b.classList.toggle('selected', b.dataset.id === id));
+    document.getElementById('stepConfirm').hidden = true;
+    const step = document.getElementById('stepCalendar');
+    step.hidden = false;
+    const now = new Date();
+    calYear = now.getFullYear(); calMonth = now.getMonth();
+    document.getElementById('timeLabel').textContent = 'Select a date';
+    document.getElementById('timeList').innerHTML = '';
+    loadMonth();
+    step.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function changeMonth(d) {
+    calMonth += d; if (calMonth < 0) { calMonth = 11; calYear--; } if (calMonth > 11) { calMonth = 0; calYear++; }
+    loadMonth();
+  }
+
+  async function loadMonth() {
+    const label = document.getElementById('calMonthLabel');
+    label.textContent = `${MONTHS[calMonth]} ${calYear}`;
+    const now = new Date();
+    document.getElementById('calPrev').disabled = calYear < now.getFullYear() || (calYear === now.getFullYear() && calMonth <= now.getMonth());
+    document.getElementById('calNext').disabled = (calYear - now.getFullYear()) * 12 + (calMonth - now.getMonth()) >= 2;
+    const monthStart = new Date(calYear, calMonth, 1, 12);
+    // Square's widget starts its window a week before the month's first week, or today, whichever is later
+    const weekStart = new Date(monthStart); weekStart.setDate(monthStart.getDate() - monthStart.getDay() - 7);
+    const from = weekStart > now ? weekStart : now;
+    const fromKey = dayKey(from.getTime() / 1000);
+    renderCalendar({}, true);
+    const my = ++availReq;
+    try {
+      const r = await fetch(`${API_BASE}/api/square/availability?variation=${encodeURIComponent(selectedService.variation_id)}&from=${fromKey}`);
+      const d = await r.json();
+      if (my !== availReq) return;
+      slotsByDay = {};
+      const prefix = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-`;
+      (d.slots || []).forEach(sl => { const k = dayKey(sl.start); if (k.startsWith(prefix)) (slotsByDay[k] = slotsByDay[k] || []).push(sl); });
+      renderCalendar(slotsByDay, false);
+    } catch (e) {
+      if (my !== availReq) return;
+      document.getElementById('calFoot').innerHTML = `Couldn't load times. <a href="${SQ_BASE}" target="_blank" rel="noopener">Book on Square &rarr;</a>`;
+    }
+  }
+
+  function renderCalendar(days, loading) {
+    const grid = document.getElementById('calGrid');
+    const first = new Date(calYear, calMonth, 1).getDay();
+    const count = new Date(calYear, calMonth + 1, 0).getDate();
+    const todayKey = dayKey(Date.now() / 1000);
+    let html = '';
+    for (let i = 0; i < first; i++) html += '<span class="cal-day empty"></span>';
+    for (let d = 1; d <= count; d++) {
+      const k = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const n = (days[k] || []).length;
+      const past = k < todayKey;
+      const cls = ['cal-day', past ? 'past' : '', n ? 'avail' : '', k === todayKey ? 'today' : ''].join(' ');
+      html += n ? `<button class="${cls}" onclick="selectDay('${k}')">${d}<i>${n}</i></button>` : `<span class="${cls}">${d}</span>`;
+    }
+    grid.innerHTML = html;
+    const total = Object.values(days).reduce((a, b) => a + b.length, 0);
+    document.getElementById('calFoot').textContent = loading ? 'Checking live availability…' : total ? `${total} open ${total === 1 ? 'time' : 'times'} this month` : 'No openings this month. Try the next one.';
+  }
+
+  function selectDay(k) {
+    document.querySelectorAll('.cal-day').forEach(b => b.classList.toggle('selected', b.textContent.replace(/\D/g, '') === String(parseInt(k.slice(8))) && b.classList.contains('avail')));
+    const slots = (slotsByDay[k] || []).slice().sort((a, b) => a.start - b.start);
+    document.getElementById('timeLabel').textContent = fmtLong(slots[0].start);
+    document.getElementById('timeList').innerHTML = slots.map(sl => `<button class="time-slot" onclick="selectSlot(${sl.start}, ${sl.end})">${fmtTime(sl.start)}</button>`).join('');
+  }
+
+  async function selectSlot(start, end) {
+    selectedSlot = { start, end };
+    document.querySelectorAll('.time-slot').forEach(b => b.classList.toggle('selected', b.textContent === fmtTime(start)));
+    const s = selectedService;
+    const step = document.getElementById('stepConfirm');
+    const btn = document.getElementById('bookCheckout');
+    document.getElementById('bookingSummary').innerHTML = `
+      <div class="summary-row"><span>Lesson</span><strong>${s.name}</strong></div>
+      <div class="summary-row"><span>When</span><strong>${fmtLong(start)} at ${fmtTime(start)}</strong></div>
+      <div class="summary-row"><span>Length</span><strong>${dur(s.minutes)}</strong></div>
+      <div class="summary-row"><span>Price</span><strong>${money(s.price_cents)}</strong></div>`;
+    btn.textContent = 'Confirming this time is still open…'; btn.classList.add('is-loading'); btn.removeAttribute('href');
+    step.hidden = false;
+    step.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Re-check the exact day the way Square does at checkout, so the slot we hand off is guaranteed to exist there
+    let ok = true;
+    try {
+      const r = await fetch(`${API_BASE}/api/square/availability?variation=${encodeURIComponent(s.variation_id)}&day=${dayKey(start)}`);
+      const d = await r.json();
+      ok = (d.slots || []).some(x => x.start === start);
+    } catch (e) { ok = true; }
+    if (selectedSlot?.start !== start) return;
+    btn.classList.remove('is-loading');
+    if (!ok) {
+      btn.textContent = 'That time was just taken. Pick another.';
+      loadMonth();
+      return;
+    }
+    const url = new URL(SQ_BASE);
+    url.searchParams.set('service_id', s.id);
+    url.searchParams.set('variation_id', s.variation_id);
+    if (s.staff_ids[0]) url.searchParams.set('staff_id', s.staff_ids[0]);
+    url.searchParams.set('date', dayKey(start));
+    url.searchParams.set('start_time', tzOffsetISO(start));
+    url.searchParams.set('quick_checkout', 'true');
+    btn.href = url.toString();
+    btn.innerHTML = 'Continue to Secure Checkout &rarr;';
+  }
+
+  loadServices();
+
 </script>
 </body>
 </html>

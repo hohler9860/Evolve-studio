@@ -103,7 +103,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
 
@@ -119,7 +119,7 @@
       <li><a href="#testimonials">Reviews</a></li>
       <li><a href="#careers">Careers</a></li>
       <li><a href="tel:+16178524179"><strong>(617) 852-4179</strong></a></li>
-      <li><a href="#book" class="nav-cta">Book a Lesson</a></li>
+      <li><a href="/book" class="nav-cta">Book a Lesson</a></li>
     </ul>
     <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
   </div>
@@ -159,7 +159,7 @@
             <div class="label">Most Students</div>
           </div>
         </div>
-        <a href="#book" class="cta-small">Book Now &rarr;</a>
+        <a href="/book" class="cta-small">Book Now &rarr;</a>
       </div>
     </div>
   </div>
@@ -427,54 +427,6 @@
 </section>
 
 <!-- Booking -->
-<section class="booking" id="book">
-  <div class="container">
-    <div class="booking-header fade-up">
-      <div class="section-label">Book Online</div>
-      <div class="section-title">Schedule Your Lesson</div>
-      <p class="section-desc">Live availability straight from our calendar. Pick a lesson, pick a time, and finish checkout securely with Square.</p>
-    </div>
-    <div class="booking-inner fade-up">
-
-      <div class="booking-step">
-        <div class="step-label">Step 1 &mdash; Choose a Lesson</div>
-        <div class="service-options" id="serviceOptions"><div class="sq-loading">Loading services&hellip;</div></div>
-      </div>
-
-      <div class="booking-step" id="stepCalendar" hidden>
-        <div class="step-label">Step 2 &mdash; Pick a Date &amp; Time <span class="tz-note">Times shown in Eastern Time</span></div>
-        <div class="calendar-wrap glass">
-          <div class="calendar">
-            <div class="cal-header">
-              <button class="cal-nav" id="calPrev" onclick="changeMonth(-1)" aria-label="Previous month">&larr;</button>
-              <h3 id="calMonthLabel"></h3>
-              <button class="cal-nav" id="calNext" onclick="changeMonth(1)" aria-label="Next month">&rarr;</button>
-            </div>
-            <div class="cal-dow"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
-            <div class="cal-grid" id="calGrid"></div>
-            <div class="cal-foot" id="calFoot"></div>
-          </div>
-          <div class="time-panel">
-            <div class="time-label" id="timeLabel">Select a date</div>
-            <div class="time-list" id="timeList"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="booking-step" id="stepConfirm" hidden>
-        <div class="step-label">Step 3 &mdash; Confirm &amp; Checkout</div>
-        <div class="booking-summary glass" id="bookingSummary"></div>
-        <a class="booking-submit" id="bookCheckout" href="#" target="_blank" rel="noopener">Continue to Secure Checkout &rarr;</a>
-        <div class="booking-note">Checkout opens on Square with your lesson and date already selected. Tap your time once more to confirm, then add your name, phone, and a card to hold the spot.</div>
-      </div>
-
-      <div class="booking-alt">
-        Prefer Square's booking window? <a href="https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services" target="_blank" rel="noopener">Open it here &rarr;</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- Careers -->
 <section class="careers" id="careers">
   <div class="container">
@@ -551,7 +503,7 @@
       <div class="cta-faces" data-pass-pick="7"></div>
       <div class="cta-actions">
         <a href="tel:+16178524179" class="btn btn-white">Call (617) 852-4179</a>
-        <a href="#book" class="btn btn-ghost">Book Online</a>
+        <a href="/book" class="btn btn-ghost">Book Online</a>
       </div>
       <div class="cta-footer">
         Or text us anytime at <a href="sms:+16178524179">(617) 852-4179</a>
@@ -574,7 +526,7 @@
         <a href="#why-us">Why Us</a>
         <a href="#areas">Areas Served</a>
         <a href="#testimonials">Reviews</a>
-        <a href="#book">Book a Lesson</a>
+        <a href="/book">Book a Lesson</a>
         <a href="#careers">Careers</a>
       </div>
       <div class="footer-col">
@@ -587,7 +539,7 @@
       <div class="footer-col">
         <h4>Contact</h4>
         <a href="tel:+16178524179">(617) 852-4179</a>
-        <a href="#book">Book Online</a>
+        <a href="/book">Book Online</a>
         <a href="https://maps.google.com/?q=810+Memorial+Dr+Suite+205B+Cambridge+MA+02139" target="_blank" rel="noopener">810 Memorial Dr, Suite 205B<br>Cambridge, MA 02139</a>
         <a href="#">Open 7 Days a Week</a>
       </div>
@@ -692,159 +644,6 @@
 
   const API_BASE = '';
 
-  // ─── Square-powered booking ───
-  const SQ_BASE = 'https://book.squareup.com/appointments/uxsphao02hdarx/location/LFX3M7S62PB2R/services';
-  const TZ = 'America/New_York';
-  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  let sqServices = [], selectedService = null, selectedSlot = null;
-  let calYear, calMonth, slotsByDay = {}, availReq = 0;
-
-  const money = c => c == null ? '' : '$' + (c / 100).toFixed(c % 100 ? 2 : 0);
-  const dur = m => m >= 60 ? (m / 60) + ' hr' + (m > 60 ? 's' : '') : m + ' min';
-  const fmtParts = (sec, opts) => new Intl.DateTimeFormat('en-US', { timeZone: TZ, ...opts }).formatToParts(new Date(sec * 1000));
-  const dayKey = sec => { const p = Object.fromEntries(fmtParts(sec, { year: 'numeric', month: '2-digit', day: '2-digit' }).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
-  const fmtTime = sec => new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', minute: '2-digit' }).format(new Date(sec * 1000));
-  const fmtLong = sec => new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(sec * 1000));
-  const tzOffsetISO = sec => { // ISO with Eastern offset for Square's start_time param
-    const p = Object.fromEntries(fmtParts(sec, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23', timeZoneName: 'longOffset' }).map(x => [x.type, x.value]));
-    const off = (p.timeZoneName || 'GMT-05:00').replace('GMT', '') || '+00:00';
-    return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:${p.second}${off}`;
-  };
-
-  async function loadServices() {
-    const box = document.getElementById('serviceOptions');
-    try {
-      const r = await fetch(`${API_BASE}/api/square/services`);
-      const d = await r.json();
-      sqServices = d.services;
-      const icon = n => /private/i.test(n) ? '&#9889;' : /highway/i.test(n) ? '&#128739;' : /exam|maneuver|manuever/i.test(n) ? '&#128203;' : '&#128663;';
-      box.innerHTML = sqServices.map(s => `
-        <button class="service-opt" data-id="${s.variation_id}" onclick="selectService('${s.variation_id}')">
-          <span class="service-opt-icon">${icon(s.name)}</span>
-          <span class="service-opt-info">
-            <strong>${s.name}</strong>
-            <span>${money(s.price_cents)} &mdash; ${dur(s.minutes)}</span>
-          </span>
-        </button>`).join('');
-    } catch (e) {
-      box.innerHTML = `<div class="sq-loading">Couldn't load services. <a href="${SQ_BASE}" target="_blank" rel="noopener">Book on Square instead &rarr;</a></div>`;
-    }
-  }
-
-  function selectService(id) {
-    selectedService = sqServices.find(s => s.variation_id === id);
-    selectedSlot = null;
-    document.querySelectorAll('.service-opt').forEach(b => b.classList.toggle('selected', b.dataset.id === id));
-    document.getElementById('stepConfirm').hidden = true;
-    const step = document.getElementById('stepCalendar');
-    step.hidden = false;
-    const now = new Date();
-    calYear = now.getFullYear(); calMonth = now.getMonth();
-    document.getElementById('timeLabel').textContent = 'Select a date';
-    document.getElementById('timeList').innerHTML = '';
-    loadMonth();
-    step.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function changeMonth(d) {
-    calMonth += d; if (calMonth < 0) { calMonth = 11; calYear--; } if (calMonth > 11) { calMonth = 0; calYear++; }
-    loadMonth();
-  }
-
-  async function loadMonth() {
-    const label = document.getElementById('calMonthLabel');
-    label.textContent = `${MONTHS[calMonth]} ${calYear}`;
-    const now = new Date();
-    document.getElementById('calPrev').disabled = calYear < now.getFullYear() || (calYear === now.getFullYear() && calMonth <= now.getMonth());
-    document.getElementById('calNext').disabled = (calYear - now.getFullYear()) * 12 + (calMonth - now.getMonth()) >= 2;
-    const monthStart = new Date(calYear, calMonth, 1, 12);
-    // Square's widget starts its window a week before the month's first week, or today, whichever is later
-    const weekStart = new Date(monthStart); weekStart.setDate(monthStart.getDate() - monthStart.getDay() - 7);
-    const from = weekStart > now ? weekStart : now;
-    const fromKey = dayKey(from.getTime() / 1000);
-    renderCalendar({}, true);
-    const my = ++availReq;
-    try {
-      const r = await fetch(`${API_BASE}/api/square/availability?variation=${encodeURIComponent(selectedService.variation_id)}&from=${fromKey}`);
-      const d = await r.json();
-      if (my !== availReq) return;
-      slotsByDay = {};
-      const prefix = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-`;
-      (d.slots || []).forEach(sl => { const k = dayKey(sl.start); if (k.startsWith(prefix)) (slotsByDay[k] = slotsByDay[k] || []).push(sl); });
-      renderCalendar(slotsByDay, false);
-    } catch (e) {
-      if (my !== availReq) return;
-      document.getElementById('calFoot').innerHTML = `Couldn't load times. <a href="${SQ_BASE}" target="_blank" rel="noopener">Book on Square &rarr;</a>`;
-    }
-  }
-
-  function renderCalendar(days, loading) {
-    const grid = document.getElementById('calGrid');
-    const first = new Date(calYear, calMonth, 1).getDay();
-    const count = new Date(calYear, calMonth + 1, 0).getDate();
-    const todayKey = dayKey(Date.now() / 1000);
-    let html = '';
-    for (let i = 0; i < first; i++) html += '<span class="cal-day empty"></span>';
-    for (let d = 1; d <= count; d++) {
-      const k = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-      const n = (days[k] || []).length;
-      const past = k < todayKey;
-      const cls = ['cal-day', past ? 'past' : '', n ? 'avail' : '', k === todayKey ? 'today' : ''].join(' ');
-      html += n ? `<button class="${cls}" onclick="selectDay('${k}')">${d}<i>${n}</i></button>` : `<span class="${cls}">${d}</span>`;
-    }
-    grid.innerHTML = html;
-    const total = Object.values(days).reduce((a, b) => a + b.length, 0);
-    document.getElementById('calFoot').textContent = loading ? 'Checking live availability…' : total ? `${total} open ${total === 1 ? 'time' : 'times'} this month` : 'No openings this month. Try the next one.';
-  }
-
-  function selectDay(k) {
-    document.querySelectorAll('.cal-day').forEach(b => b.classList.toggle('selected', b.textContent.replace(/\D/g, '') === String(parseInt(k.slice(8))) && b.classList.contains('avail')));
-    const slots = (slotsByDay[k] || []).slice().sort((a, b) => a.start - b.start);
-    document.getElementById('timeLabel').textContent = fmtLong(slots[0].start);
-    document.getElementById('timeList').innerHTML = slots.map(sl => `<button class="time-slot" onclick="selectSlot(${sl.start}, ${sl.end})">${fmtTime(sl.start)}</button>`).join('');
-  }
-
-  async function selectSlot(start, end) {
-    selectedSlot = { start, end };
-    document.querySelectorAll('.time-slot').forEach(b => b.classList.toggle('selected', b.textContent === fmtTime(start)));
-    const s = selectedService;
-    const step = document.getElementById('stepConfirm');
-    const btn = document.getElementById('bookCheckout');
-    document.getElementById('bookingSummary').innerHTML = `
-      <div class="summary-row"><span>Lesson</span><strong>${s.name}</strong></div>
-      <div class="summary-row"><span>When</span><strong>${fmtLong(start)} at ${fmtTime(start)}</strong></div>
-      <div class="summary-row"><span>Length</span><strong>${dur(s.minutes)}</strong></div>
-      <div class="summary-row"><span>Price</span><strong>${money(s.price_cents)}</strong></div>`;
-    btn.textContent = 'Confirming this time is still open…'; btn.classList.add('is-loading'); btn.removeAttribute('href');
-    step.hidden = false;
-    step.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    // Re-check the exact day the way Square does at checkout, so the slot we hand off is guaranteed to exist there
-    let ok = true;
-    try {
-      const r = await fetch(`${API_BASE}/api/square/availability?variation=${encodeURIComponent(s.variation_id)}&day=${dayKey(start)}`);
-      const d = await r.json();
-      ok = (d.slots || []).some(x => x.start === start);
-    } catch (e) { ok = true; }
-    if (selectedSlot?.start !== start) return;
-    btn.classList.remove('is-loading');
-    if (!ok) {
-      btn.textContent = 'That time was just taken. Pick another.';
-      loadMonth();
-      return;
-    }
-    const url = new URL(SQ_BASE);
-    url.searchParams.set('service_id', s.id);
-    url.searchParams.set('variation_id', s.variation_id);
-    if (s.staff_ids[0]) url.searchParams.set('staff_id', s.staff_ids[0]);
-    url.searchParams.set('date', dayKey(start));
-    url.searchParams.set('start_time', tzOffsetISO(start));
-    url.searchParams.set('quick_checkout', 'true');
-    btn.href = url.toString();
-    btn.innerHTML = 'Continue to Secure Checkout &rarr;';
-  }
-
-  loadServices();
-
   // ─── Career Form Submission ───
   async function submitCareerForm() {
     const name = document.getElementById('careerName').value.trim();
@@ -929,7 +728,7 @@
   const FAQ = [
     {
       keywords: ['price','pricing','cost','how much','rate','rates','fee','fees','expensive','cheap','afford'],
-      answer: 'Here are our current rates:\n\n<b>City Driving Lessons</b> — $80/hour (not guaranteed one-on-one)\n<b>5-Hour City Package</b> — $350, save $50 (available Oct 1 to Apr 1, weekdays only, paid in cash at first lesson)\n<b>Private Driving Lessons</b> — $120/hour (completely one-on-one)\n<b>Highway Lessons</b> — $240 (mandatory 2-hour session)\n<b>Road Test Sponsorship</b> — starting at $180 at the Watertown RMV, other locations on request (text (617) 852-4179 for pricing)\n\nWant to book? <a href="#book">Click here to schedule</a> or call <a href="tel:+16178524179">(617) 852-4179</a>.'
+      answer: 'Here are our current rates:\n\n<b>City Driving Lessons</b> — $80/hour (not guaranteed one-on-one)\n<b>5-Hour City Package</b> — $350, save $50 (available Oct 1 to Apr 1, weekdays only, paid in cash at first lesson)\n<b>Private Driving Lessons</b> — $120/hour (completely one-on-one)\n<b>Highway Lessons</b> — $240 (mandatory 2-hour session)\n<b>Road Test Sponsorship</b> — starting at $180 at the Watertown RMV, other locations on request (text (617) 852-4179 for pricing)\n\nWant to book? <a href="/book">Click here to schedule</a> or call <a href="tel:+16178524179">(617) 852-4179</a>.'
     },
     {
       keywords: ['service','services','offer','what do you','lesson type','types of lesson','options'],
@@ -937,7 +736,7 @@
     },
     {
       keywords: ['book','booking','schedule','appointment','reserve','sign up','sign-up','signup'],
-      answer: 'You can book a lesson right here on our website! <a href="#book">Click here to schedule</a> — just pick your service, choose a date and time, and fill in your info. You can also call or text us at <a href="tel:+16178524179">(617) 852-4179</a>.'
+      answer: 'You can book a lesson right here on our website! <a href="/book">Click here to schedule</a> — just pick your service, choose a date and time, and fill in your info. You can also call or text us at <a href="tel:+16178524179">(617) 852-4179</a>.'
     },
     {
       keywords: ['area','areas','location','where','serve','cambridge','somerville','boston','watertown','salem','pick up','pickup','drop off','dropoff','meet','address','office','located'],
@@ -949,7 +748,7 @@
     },
     {
       keywords: ['phone','call','text','contact','reach','number','talk to'],
-      answer: 'You can reach us at <a href="tel:+16178524179"><b>(617) 852-4179</b></a> — call or text anytime! You can also <a href="#book">book online here</a>.'
+      answer: 'You can reach us at <a href="tel:+16178524179"><b>(617) 852-4179</b></a> — call or text anytime! You can also <a href="/book">book online here</a>.'
     },
     {
       keywords: ['review','reviews','rating','ratings','stars','google','testimonial'],
@@ -973,7 +772,7 @@
     },
     {
       keywords: ['hour','hours','open','available','when','days','time','schedule'],
-      answer: 'We\'re open <b>7 days a week</b>! Lesson times are generally available from 9 AM to 6 PM. You can check available times by <a href="#book">booking online</a> or calling us at <a href="tel:+16178524179">(617) 852-4179</a>.'
+      answer: 'We\'re open <b>7 days a week</b>! Lesson times are generally available from 9 AM to 6 PM. You can check available times by <a href="/book">booking online</a> or calling us at <a href="tel:+16178524179">(617) 852-4179</a>.'
     },
     {
       keywords: ['highway','freeway','interstate','high speed'],
@@ -1009,7 +808,7 @@
     },
     {
       keywords: ['thank','thanks','appreciate','awesome','great','perfect','cool'],
-      answer: 'You\'re welcome! If you have any other questions, I\'m here to help. Ready to book? <a href="#book">Schedule your lesson here</a> or call <a href="tel:+16178524179">(617) 852-4179</a>.'
+      answer: 'You\'re welcome! If you have any other questions, I\'m here to help. Ready to book? <a href="/book">Schedule your lesson here</a> or call <a href="tel:+16178524179">(617) 852-4179</a>.'
     }
   ];
 
@@ -1031,7 +830,7 @@
 
     if (bestMatch && bestScore > 0) return bestMatch.answer;
 
-    return 'I\'m not sure about that one! For specific questions, you can call or text Alexa at <a href="tel:+16178524179"><b>(617) 852-4179</b></a> — she\'ll be happy to help. Or you can <a href="#book">book a lesson online</a>.';
+    return 'I\'m not sure about that one! For specific questions, you can call or text Alexa at <a href="tel:+16178524179"><b>(617) 852-4179</b></a> — she\'ll be happy to help. Or you can <a href="/book">book a lesson online</a>.';
   }
 
   function addMessage(text, type) {

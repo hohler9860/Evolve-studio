@@ -640,6 +640,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+app.get('/book', (req, res) => {
+  res.sendFile(path.join(__dirname, 'book.html'));
+});
+
 app.get('/services', (req, res) => {
   res.sendFile(path.join(__dirname, 'services.html'));
 });
